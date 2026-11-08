@@ -47,8 +47,9 @@ test("editor covers all fields, reorder, live preview, autosave and interface la
   await expect(page.locator(".section-toggle").nth(1)).toHaveText("Education");
   const dragHandle=page.locator(".editor-section").filter({has:page.getByRole("button",{name:"Skills",exact:true})}).locator(".drag-handle");
   const dropTarget=page.locator(".editor-section").first();
-  await dragHandle.hover();
+  await dragHandle.hover({position:{x:8,y:8}});
   await page.mouse.down();
+  await dragHandle.hover({position:{x:16,y:16}});
   await dropTarget.hover({position:{x:24,y:16}});
   await dropTarget.hover({position:{x:28,y:19}});
   await page.mouse.up();
