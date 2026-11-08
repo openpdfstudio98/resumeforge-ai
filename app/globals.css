@@ -144,7 +144,7 @@ input::placeholder,textarea::placeholder{color:#a0adc9}
 .section-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;padding:3px;gap:3px}
 .section-row .icon-btn{background:transparent;border-color:transparent;min-height:42px;min-width:39px}
 .section-toggle{text-align:left;font-weight:650;color:var(--text);min-height:44px;overflow-wrap:anywhere}
-.drag-handle{padding:5px;color:#a1aecd;cursor:grab;user-select:none}
+.drag-handle{padding:5px;color:#a1aecd;cursor:grab;user-select:none;touch-action:none}
 .drag-handle svg{pointer-events:none}
 .entry-fields{padding:0 9px 10px}
 .entry{margin:0 0 10px;border:1px solid var(--line);border-radius:8px;padding:9px;min-width:0}

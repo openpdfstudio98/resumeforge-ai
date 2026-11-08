@@ -9,8 +9,6 @@ import { Field } from "./field";
 import { Preview } from "./preview";
 import { download, jsonDownload } from "./storage";
 
-const sectionDragType = "application/x-resumeforge-section";
-
 export function Editor({resume,locale,update,warning}:{resume:Resume;locale:Locale;update:(resume:Resume)=>void;warning?:string}) {
   const t=work[locale];
   const [active,setActive]=useState<SectionKey|"personal"|"design">("personal");
@@ -65,18 +63,16 @@ export function Editor({resume,locale,update,warning}:{resume:Resume;locale:Loca
           {resume.order.map((key,index)=>{
             const expanded=active===key;
             const entries=resume.sections[key];
-            return <div key={key} className="editor-section" onDragOver={event=>{
-              if (!event.dataTransfer.types.includes(sectionDragType)) return;
-              event.preventDefault();
-              event.dataTransfer.dropEffect="move";
-            }} onDrop={event=>{
-              const from=sectionKeys.find(section=>section===event.dataTransfer.getData(sectionDragType));
-              if (!from) return;
-              event.preventDefault();
-              if (from!==key) move(from,key);
-            }}>
+            return <div key={key} className="editor-section" data-section={key}>
               <div className="section-row">
-                <span className="drag-handle" title={t.drag} draggable onDragStart={event=>{event.dataTransfer.setData(sectionDragType,key);event.dataTransfer.effectAllowed="move";}}><GripVertical size={18}/></span>
+                <span className="drag-handle" title={t.drag} aria-hidden="true" onPointerDown={event=>{
+                  if (event.button===0) event.currentTarget.setPointerCapture(event.pointerId);
+                }} onPointerUp={event=>{
+                  if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+                  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest(".editor-section");
+                  const to=sectionKeys.find(section=>section===target?.getAttribute("data-section"));
+                  if (to && to!==key) move(key,to);
+                }}><GripVertical size={18}/></span>
                 <button className="section-toggle" aria-expanded={expanded} aria-controls={`section-${key}`} onClick={()=>setActive(expanded?"personal":key)}>{labels[locale][key]}</button>
                 <button className="icon-btn" aria-label={`${t.up} · ${labels[locale][key]}`} disabled={index===0} onClick={()=>move(key,resume.order[index-1])}><ArrowUp size={15}/></button>
                 <button className="icon-btn" aria-label={`${t.down} · ${labels[locale][key]}`} disabled={index===sectionKeys.length-1} onClick={()=>move(key,resume.order[index+1])}><ArrowDown size={15}/></button>
