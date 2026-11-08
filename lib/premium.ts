@@ -40,6 +40,11 @@ const styles:Partial<Record<Template,PremiumStyle>>={
   "studio-pastel":{sidebar:"#EEE9F5",sideInk:"#493D57",masthead:"none",trim:"#8A76A7",timeline:false,photo:true},
   "executive-timeline":{sidebar:"#263B52",sideInk:"#FFFFFF",masthead:"rule",trim:"#8595A4",timeline:true,photo:false},
   "creative-spectrum":{sidebar:"#E8F1EE",sideInk:"#274F4A",masthead:"filled",mastheadFill:"#226D75",rightSidebar:true,trim:"#80B3A6",timeline:false,photo:true},
+  "contemporary-split":{sidebar:"#E7F3F1",sideInk:"#254E4D",masthead:"rule",rightSidebar:true,trim:"#57A39D",timeline:false,photo:false},
+  "bold-portrait":{sidebar:"#EBEEF7",sideInk:"#354366",masthead:"filled",mastheadFill:"#354366",trim:"#9CA9CB",timeline:false,photo:true},
+  "creative-burst":{sidebar:"#FAEADF",sideInk:"#653A29",masthead:"filled",mastheadFill:"#A45431",rightSidebar:true,trim:"#E8B598",timeline:false,photo:true},
+  "executive-focus":{sidebar:"#384C43",sideInk:"#FFFFFF",masthead:"none",trim:"#B8A37F",timeline:true,photo:true},
+  "industrial-mono":{sidebar:"#EDEDEC",sideInk:"#32363A",masthead:"none",trim:"#777B7E",timeline:true,photo:false},
 };
 
 export function premiumStyle(template:Template) {

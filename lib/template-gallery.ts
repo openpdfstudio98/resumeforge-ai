@@ -4,9 +4,9 @@ export const galleryGroups=["all","studio","premium","professional","technical",
 export type GalleryGroup=typeof galleryGroups[number];
 export const collectionFilters=["all","modern","classic","minimal","ats","creative","oneColumn","twoColumn","photo"] as const;
 export type CollectionFilter=typeof collectionFilters[number];
-const oneColumnTemplates=new Set<Template>(["classic-ats","modern-executive","fresh-graduate","minimal-professional","technical-engineer","creative-professional","modern-portrait","engineering-blue","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial","heritage-classic","signature-minimal","academic-scholar"]);
-const atsTemplates=new Set<Template>(["classic-ats","minimal-professional","heritage-classic","signature-minimal","academic-scholar","aurora-minimal","mono-grid"]);
-const classicTemplates=new Set<Template>(["heritage-classic","academic-scholar","minimal-professional","ivory-editorial","paper-loom","executive-ledger","onyx-gold"]);
+const oneColumnTemplates=new Set<Template>(["classic-ats","modern-executive","fresh-graduate","minimal-professional","technical-engineer","creative-professional","modern-portrait","engineering-blue","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial","heritage-classic","signature-minimal","academic-scholar","modern-ink","classic-frame","pastel-dawn","colour-confetti","academic-essential"]);
+const atsTemplates=new Set<Template>(["classic-ats","minimal-professional","heritage-classic","signature-minimal","academic-scholar","aurora-minimal","mono-grid","academic-essential","modern-ink"]);
+const classicTemplates=new Set<Template>(["heritage-classic","academic-scholar","minimal-professional","ivory-editorial","paper-loom","executive-ledger","onyx-gold","classic-frame","academic-essential"]);
 const minimalTemplates=new Set<Template>(["signature-minimal","minimal-professional","aurora-minimal","mono-grid","editorial-mono","classic-ats"]);
 export function matchesCollection(template:Template,filter:CollectionFilter) {
   switch(filter) {
@@ -62,6 +62,16 @@ export const templateGroups:Record<Template,Exclude<GalleryGroup,"all">>={
   "studio-pastel":"studio",
   "executive-timeline":"professional",
   "creative-spectrum":"studio",
+  "modern-ink":"professional",
+  "classic-frame":"professional",
+  "pastel-dawn":"studio",
+  "colour-confetti":"studio",
+  "contemporary-split":"premium",
+  "bold-portrait":"photo",
+  "creative-burst":"studio",
+  "executive-focus":"professional",
+  "industrial-mono":"premium",
+  "academic-essential":"professional",
 };
 export const galleryOrder = [...templateKeys.filter(key=>templateGroups[key]==="studio"), ...templateKeys.filter(key=>templateGroups[key]==="premium"), ...templateKeys.filter(key=>!["studio","premium"].includes(templateGroups[key]))];
 
