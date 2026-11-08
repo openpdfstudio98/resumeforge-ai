@@ -10,7 +10,7 @@ import { documentBlocks } from "../lib/blocks";
 import { Field } from "./field";
 import { ResumePhoto } from "./resume-photo";
 import { Preview } from "./preview";
-import { download, jsonDownload } from "./storage";
+import { download } from "./storage";
 
 export function Editor({resume,locale,update,warning}:{resume:Resume;locale:Locale;update:(resume:Resume)=>boolean;warning?:string}) {
   const t=useCopy(work[locale]);
@@ -102,7 +102,7 @@ export function Editor({resume,locale,update,warning}:{resume:Resume;locale:Loca
             </div>;
           })}
         </div>
-        <div className="actions editor-footer"><button className="btn" onClick={()=>jsonDownload([resume],name)}>{t.backup}</button><a className="btn" href={`/${locale}/ats?id=${resume.id}`}>{t.draftCheck}</a></div>
+        <div className="actions editor-footer"><a className="btn" href={`/${locale}/ats?id=${resume.id}`}>{t.draftCheck}</a></div>
       </section>
       <section className="panel preview-pane" tabIndex={0} aria-label={t.preview}>
         <div className="preview-heading"><h2>{t.preview}</h2><span className="badge">{t.a4}</span></div>
