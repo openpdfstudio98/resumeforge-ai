@@ -8,6 +8,7 @@ import "../globals.css";
 
 export const metadata:Metadata = {
   applicationName:"Civora Resume",
+  other:{"google-adsense-account":"ca-pub-5858650167026791"},
   title:{default:"Civora Resume",template:"%s | Civora Resume"},
   metadataBase:siteOrigin() ? new URL(siteOrigin()!) : undefined,
   verification:{google:process.env.RESUMEFORGE_GOOGLE_VERIFICATION},
