@@ -6,6 +6,7 @@ import { isSidebarBlock, isTitleBlock, premiumStyle, premiumText } from "./premi
 
 export const a4 = { width: 595.28, height: 841.89 };
 const ink = "#20283B";
+const singleColumn = new Set(["mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial"]);
 const muted = "#4D586C";
 export type TextLine = {text:string; x:number; y:number; width:number; size:number; color:string; bold:boolean};
 type Decoration = {x:number;y:number;width:number;height:number;color:string};
@@ -19,9 +20,9 @@ export function appearance(r: Resume) {
   return {
     portrait,technical,
     margin:r.template === "minimal-professional" ? 62 : r.template === "technical-engineer" ? 45 : 52,
-    centered:r.template === "minimal-professional" || r.template === "modern-executive",
-    rule:r.template === "classic-ats" || r.template === "technical-engineer",
-    top:portrait || technical || r.template === "modern-executive" || r.template === "creative-professional",
+    centered:["minimal-professional","modern-executive","ivory-editorial","editorial-mono"].includes(r.template),
+    rule:["classic-ats","technical-engineer","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial"].includes(r.template),
+    top:portrait || technical || ["modern-executive","creative-professional","aurora-minimal","paper-loom"].includes(r.template),
     bar:r.template === "fresh-graduate" || r.template === "creative-professional",
     nameSize:portrait ? 33 : technical ? 28 : r.template === "creative-professional" ? 32 : r.template === "modern-executive" ? 30 : r.template === "technical-engineer" ? 24 : 27,
   };
@@ -30,6 +31,10 @@ export function readable(color:string) {
   const value = color.slice(1).match(/../g)!.map(hex=>parseInt(hex,16)/255);
   const [r,g,b] = value.map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
   return 1.05/(0.2126*r+0.7152*g+0.0722*b+0.05)>=4.5 ? color : ink;
+}
+function contrastOn(background:string) {
+  const [r,g,b] = background.slice(1).match(/../g)!.map(hex=>parseInt(hex,16)/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
+  return 0.2126*r+0.7152*g+0.0722*b < 0.35 ? "#FFFFFF" : ink;
 }
 export function textStyle(r:Resume, role:Role) {
   const sizes:Record<Role,number> = {name:appearance(r).nameSize,headline:r.size+3,contact:r.size-0.5,heading:r.size+1,title:r.size,meta:r.size-0.5,body:r.size};
@@ -62,7 +67,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     pdf.addFileToVFS(`${style}.ttf`,bytes[index]);
     pdf.addFont(`${style}.ttf`,"ResumeFont",style);
   }
-  if(premiumStyle(resume.template))return {pdf,pages:layoutPremium(resume,pdf)};
+  if(premiumStyle(resume.template) && !singleColumn.has(resume.template))return {pdf,pages:layoutPremium(resume,pdf)};
   const {margin,centered,rule,top,bar,portrait,technical} = appearance(resume);
   const bottom = a4.height-margin;
   const maxWidth = a4.width-2*margin;
@@ -120,11 +125,11 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
 
 function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   const design=premiumStyle(resume.template)!;
-  const sideWidth=174;
-  const padding=24;
+  const sideWidth=160;
+  const padding=22;
   const sideX=design.rightSidebar?a4.width-sideWidth:0;
-  const mainX=design.rightSidebar?29:sideWidth+30;
-  const mainWidth=a4.width-sideWidth-59;
+  const mainX=design.rightSidebar?35:sideWidth+35;
+  const mainWidth=a4.width-sideWidth-70;
   const panelInset=design.framed?12:0;
   const panelWidth=sideWidth-2*panelInset;
   const trim=design.trim??resume.color;
@@ -188,7 +193,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   for(const block of titleBlocks) {
     for(const line of block.lines) {
       const x=design.masthead==="rule"?(a4.width-line.width)/2:fullHeader?titleInset:mainX;
-      first.lines.push({...line,x,y:titleY+block.size,size:block.size,bold:block.bold,color:filled&&!design.mastheadFill?"#FFFFFF":block.color});
+      first.lines.push({...line,x,y:titleY+block.size,size:block.size,bold:block.bold,color:filled ? contrastOn(design.mastheadFill??readable(resume.color)) : block.color});
       titleY+=block.height;
     }
     titleY+=3;
