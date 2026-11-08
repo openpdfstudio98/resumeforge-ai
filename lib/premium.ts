@@ -35,6 +35,11 @@ const styles:Partial<Record<Template,PremiumStyle>>={
   "sage-column":{sidebar:"#E8F0E9",sideInk:"#2F4A32",masthead:"none",timeline:false,photo:true},
   "cobalt-slate":{sidebar:"#E8EEF9",sideInk:"#263E65",masthead:"filled",mastheadFill:"#21468C",trim:"#779BD2",timeline:false,photo:true},
   "rose-atelier":{sidebar:"#FCE7F3",sideInk:"#831843",masthead:"filled",mastheadFill:"#FBCFE8",rightSidebar:true,trim:"#9F1239",timeline:false,photo:true},
+  "professional-stripe":{sidebar:"#EAF0F4",sideInk:"#283F50",masthead:"filled",mastheadFill:"#294C6B",timeline:false,photo:false},
+  "modern-coral":{sidebar:"#F9ECE8",sideInk:"#663E36",masthead:"filled",mastheadFill:"#A0443A",rightSidebar:true,trim:"#DAA094",timeline:true,photo:false},
+  "studio-pastel":{sidebar:"#EEE9F5",sideInk:"#493D57",masthead:"none",trim:"#8A76A7",timeline:false,photo:true},
+  "executive-timeline":{sidebar:"#263B52",sideInk:"#FFFFFF",masthead:"rule",trim:"#8595A4",timeline:true,photo:false},
+  "creative-spectrum":{sidebar:"#E8F1EE",sideInk:"#274F4A",masthead:"filled",mastheadFill:"#226D75",rightSidebar:true,trim:"#80B3A6",timeline:false,photo:true},
 };
 
 export function premiumStyle(template:Template) {
