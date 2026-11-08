@@ -13,9 +13,7 @@ function TemplateCard({locale,template}:{locale:Locale;template:Template}) {
   const root=`/${locale}`;
   const t=galleryCopy[locale];
   return <article className="template-card panel">
-    <a className="template-preview-link" href={`${root}/templates/${template}`} aria-label={`${t.preview}: ${templates[template].name}`}>
-      <TemplateSample locale={locale} template={template}/>
-    </a>
+    <TemplateSample locale={locale} template={template}/>
     <div className="template-card-copy">
       <div className="split"><span className="pill"><Ui>{t.groups[templateGroups[template]]}</Ui></span><span className="hero-sample-format">A4</span></div>
       <h3>{templates[template].name}</h3>

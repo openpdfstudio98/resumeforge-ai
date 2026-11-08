@@ -94,13 +94,13 @@ button:disabled{cursor:default;opacity:.48}
 .gallery-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
 .gallery-filters .btn{border-radius:999px;min-height:40px}
 .gallery-card-slot{min-width:0;display:grid}
-.template-card{padding:11px;grid-template-rows:auto 1fr}
-.template-preview-link{display:block;border-radius:12px}
+.template-card{position:relative;padding:11px;grid-template-rows:auto 1fr}
 .template-card-copy{display:grid;grid-template-rows:auto auto 1fr auto;gap:9px;padding:3px 6px 5px}
 .template-card-copy .pill{letter-spacing:0;font-size:.72rem}
 .template-card-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:2px}
 .template-card-actions .text-link{font-size:.84rem}
-.template-card-actions .btn{min-height:40px}
+.template-card-actions .text-link::after{content:"";position:absolute;inset:0;border-radius:var(--radius)}
+.template-card-actions .btn{min-height:40px;position:relative;z-index:1}
 .template-figure{display:grid;place-items:center;gap:18px;background:radial-gradient(#f4f3ff,#e7ebfb);border-radius:12px;padding:clamp(16px,2vw,24px);overflow:hidden}
 .template-figure .document-sheet{width:min(100%,245px);box-shadow:0 12px 24px #26345728;border-radius:3px}
 .template-figure-full .document-sheet{width:min(100%,480px)}
