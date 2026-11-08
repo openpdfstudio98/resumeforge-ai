@@ -254,3 +254,61 @@ dialog .actions{margin-top:15px}
 .template-figure .document-sheet{width:min(100%,300px);box-shadow:0 12px 30px #17243d24}
 .template-figure-full .document-sheet{width:min(100%,560px)}
 @media(min-width:800px) and (max-width:1100px){.template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Civora Resume: editorial palette, strong hierarchy and restrained accents. */
+:root{--bg:#f4f3ef;--panel:#fff;--line:#dcdedb;--text:#17211f;--muted:#586560;--violet:#315d50;--blue:#284c43;--radius:14px}
+body{background:var(--bg);color:var(--text)}
+.site-header{background:#fbfbf8;border-bottom:1px solid #d9ded8;box-shadow:none}
+.topbar{min-height:76px}
+.brand{font-size:1.17rem;font-weight:800;letter-spacing:-.055em}
+.top-nav a,.site-footer nav a,.mobile-nav a{font-weight:650;color:#45544c}
+.primary{background:#182d25;border-color:#182d25;box-shadow:none;color:#fff}
+.primary:hover:not(:disabled){background:#315d50;border-color:#315d50}
+.btn,.icon-btn{border-radius:7px;font-weight:700}
+.btn:not(.primary):hover:not(:disabled),.icon-btn:hover:not(:disabled){background:#eef3ee;border-color:#9aafa1}
+:focus-visible{outline-color:#5b8b70}
+.eyebrow{color:#426958;letter-spacing:.14em}
+.pill,.badge{background:#edf3ed;border-color:#d0ddd2;color:#315d50}
+.tile-icon{background:#e6eee8;color:#315d50;border-radius:9px}
+.landing-hero{background:#14251e;border-bottom:0;color:#f6f7f0}
+.hero-inner{max-width:1320px;gap:clamp(34px,6vw,90px);padding-block:clamp(55px,7vw,100px)}
+.hero-copy .pill{background:#243c30;border-color:#496353;color:#d8e8d8}
+.hero-copy h1{color:#f8faf3;letter-spacing:-.065em;line-height:1.02}
+.hero-copy h1 span{background:none;-webkit-text-fill-color:initial;color:#b9d7ad}
+.hero-copy p,.hero-proof{color:#c8d6cb}
+.hero-proof svg{color:#b9d7ad}
+.hero-copy .primary{background:#c4ddba;border-color:#c4ddba;color:#14251e}
+.hero-copy .primary:hover:not(:disabled){background:#d8ead1;border-color:#d8ead1;color:#14251e}
+.hero-copy .btn:not(.primary){background:transparent;color:#fff;border-color:#799084}
+.hero-copy .btn:not(.primary):hover{background:#2e4539;border-color:#a3b9aa}
+.hero-gridlines{display:none}
+.hero-visual{max-width:430px;transform:rotate(1.4deg)}
+.hero-sample-caption .pill{background:#e7efe4;border-color:#d5dfd1;color:#345441}
+.hero-sample-format{color:#5b6d60}
+.hero-sample-caption .hero-sample-format{color:#d3dfd5}
+.hero-sample-paper{background:#fff;border:0;border-block-start:5px solid #b1ca9f;border-radius:3px;box-shadow:0 24px 65px #0004;padding:clamp(20px,2.7vw,32px);gap:15px}
+.hero-sample-header .hero-sample-name{color:#18241e}.hero-sample-header .hero-sample-role,.hero-sample-section .hero-sample-heading{color:#426958}
+.hero-sample-paper strong{color:#18241e}.hero-sample-contact,.hero-sample-job span,.hero-sample-section ul{color:#59675f}
+.hero-sample-section{border-color:#d9e0d9}.hero-sample-section ul{padding-inline-start:16px}
+.hero-sample-action{transform:rotate(-1.4deg)}
+.public-section{max-width:1320px;padding-block:clamp(40px,5.2vw,76px)}
+.tool-grid,.template-grid,.stats{gap:18px}
+.panel,.step-card{border-color:#dce1da;box-shadow:none}
+.tool-card,.step-card{background:#fff;min-height:155px;border-radius:10px;padding:22px}
+.tool-card:hover,.template-card:hover{border-color:#8baa96;transform:translateY(-2px);box-shadow:0 15px 35px #1a2b2010}
+.tool-card h2,.tool-card h3{color:#182a21}
+.step-number{background:#edf3ed;color:#315d50;border-radius:8px}
+.template-card{border-radius:10px;box-shadow:none;border-color:#dce1da}
+.template-figure{background:#e8ede6;border-radius:6px}
+.template-figure .document-sheet{box-shadow:0 14px 30px #1c2a211e}
+.text-link{color:#315d50}.site-footer{background:#e9eee8;border-color:#d8e1d7}
+.app-shell,.sidebar{background:#f4f3ef}.sidebar{border-color:#d9e1d8}
+.sidebar nav a:hover,.sidebar nav a[aria-current=page]{background:#e1ede2;border-color:#d1dfd3;color:#294b38}
+.workspace .panel{border-radius:12px}.dashboard-hero{background:#183128;border-color:#183128;color:#fff}
+.dashboard-hero p{color:#cdded0}.dashboard-hero .eyebrow{color:#c0d9bf}
+.preview-pane{background:#e4e9e3}.btn[aria-pressed=true]{color:#244c37;background:#e1ede2;border-color:#8eb199}
+.photo-card,.editor-section{background:#f7f9f6;border-color:#dbe4da}
+input,textarea,select{border-color:#bdcbbf}.language-code{background:#e5efe6;color:#315d50}
+.gallery-filters .btn{border-radius:6px}.step-grid{gap:18px}
+@media(max-width:800px){.hero-visual{transform:none;max-width:500px}.hero-sample-action{transform:none}.hero-inner{padding-block:48px}.public-section{padding-block:42px}}
+@media(max-width:560px){.topbar{min-height:65px}.hero-copy h1{font-size:clamp(2.65rem,11vw,3.4rem)}.tool-grid{grid-template-columns:1fr}.hero-inner{gap:34px}.hero-sample-paper{padding:22px}.step-card{min-height:unset}}
