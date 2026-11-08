@@ -208,8 +208,10 @@ export function backup(resumes: Resume[]) {
   return JSON.stringify({version:1,resumes});
 }
 export function reorder(order: SectionKey[], from: SectionKey, to: SectionKey) {
+  if (!order.includes(from) || !order.includes(to) || from === to) return [...order];
   const result = order.filter(key => key !== from);
-  result.splice(order.indexOf(to),0,from);
+  const index = result.indexOf(to);
+  result.splice(index >= 0 ? index : result.length, 0, from);
   return result;
 }
 
@@ -217,5 +219,6 @@ export function touchResume(resume: Resume): Resume {
   return {...resume,updated:Date.now()};
 }
 export function copyResume(resume: Resume, title = resume.title): Resume {
-  return touchResume({...resume,id:crypto.randomUUID(),title:title.slice(0,120)});
+  const nextTitle = title.trim().slice(0, 120) || resume.title.trim().slice(0, 120) || "Copy";
+  return touchResume({...resume,id:crypto.randomUUID(),title:nextTitle});
 }
