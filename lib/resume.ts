@@ -8,7 +8,7 @@ export type SectionKey = typeof sectionKeys[number];
 export const entryFields = ["title", "organization", "dates", "description"] as const;
 export const personalFields = ["name", "headline", "email", "phone", "location", "website"] as const;
 export type Entry = Record<typeof entryFields[number], string> & { id: string };
-export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold"] as const;
+export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold", "aurora-minimal", "executive-ledger", "editorial-mono", "canva-bloom", "neon-grid", "paper-loom", "obsidian-ink", "sage-column", "cobalt-slate", "rose-atelier"] as const;
 export type Template = typeof templateKeys[number];
 export const fonts = ["sans", "serif", "mono"] as const;
 export type Font = typeof fonts[number];
@@ -49,6 +49,16 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "violet-atelier":{name:"Violet Atelier",color:"#542F91",font:"sans",description:{en:"A violet colour-block header, geometric accents and a framed lavender sidebar.",ms:"Pengepala blok ungu, aksen geometri dan sidebar lavender berbingkai."}},
   "ivory-editorial":{name:"Ivory Editorial",color:"#554734",font:"serif",description:{en:"A centered serif masthead, ivory paper tones and a narrow right-hand column.",ms:"Pengepala serif di tengah, tona gading dan lajur kanan yang ringkas."}},
   "onyx-gold":{name:"Onyx Gold",color:"#292C32",font:"serif",description:{en:"Charcoal sidebar, champagne-gold rules and a portrait for leadership profiles.",ms:"Sidebar arang, garisan emas lembut dan potret untuk profil kepimpinan."}},
+  "aurora-minimal":{name:"Aurora Minimal",color:"#2E6B8A",font:"sans",description:{en:"Airy minimal layout with soft aurora accents.",ms:"Susun atur minimal dengan aksen aurora lembut."}},
+  "executive-ledger":{name:"Executive Ledger",color:"#1F3864",font:"serif",description:{en:"Formal ledger-style executive resume.",ms:"Resume eksekutif gaya lejar formal."}},
+  "editorial-mono":{name:"Editorial Mono",color:"#2B2B2B",font:"mono",description:{en:"Monospace editorial two-column layout.",ms:"Susun atur editorial dua lajur monospace."}},
+  "canva-bloom":{name:"Canva Bloom",color:"#D94F70",font:"sans",description:{en:"Bright Canva-style creative template.",ms:"Templat kreatif gaya Canva yang cerah."}},
+  "neon-grid":{name:"Neon Grid",color:"#0E7490",font:"sans",description:{en:"Tech-forward neon grid layout.",ms:"Susun atur grid neon moden."}},
+  "paper-loom":{name:"Paper Loom",color:"#6B5B45",font:"serif",description:{en:"Warm paper tones with woven rules.",ms:"Tona kertas hangat dengan garis tenunan."}},
+  "obsidian-ink":{name:"Obsidian Ink",color:"#111827",font:"serif",description:{en:"Dark ink editorial with gold trim.",ms:"Editorial dakwat gelap dengan trim emas."}},
+  "sage-column":{name:"Sage Column",color:"#4F6F52",font:"sans",description:{en:"Calm sage sidebar column.",ms:"Lajur sidebar sage yang tenang."}},
+  "cobalt-slate":{name:"Cobalt Slate",color:"#1E40AF",font:"sans",description:{en:"Cobalt and slate executive hybrid.",ms:"Hibrid eksekutif kobalt dan slate."}},
+  "rose-atelier":{name:"Rose Atelier",color:"#9F1239",font:"sans",description:{en:"Rose-toned atelier creative template.",ms:"Templat kreatif tona ros atelier."}},
 };
 export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
