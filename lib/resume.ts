@@ -82,6 +82,41 @@ export function sampleResume(locale: Locale, template: Template): Resume {
     r.sections.experience=[{...r.sections.experience[0],title:r.personal.headline,description:en?"Reviewed dimensional and pressure test reports for industrial valves.":"Menyemak laporan ukuran dan ujian tekanan bagi injap industri."}];
     r.sections.education=[{...r.sections.education[0],title:en?"Diploma in Mechanical Engineering":"Diploma Kejuruteraan Mekanikal"}];
   }
+  if(template==="modern-executive") {
+    r.personal={...r.personal,name:"Nadia Rahman",headline:en?"Operations Manager":"Pengurus Operasi",email:"nadia@example.com"};
+    r.sections.summary[0].description=en?"Operations manager who leads production planning, vendor coordination and process improvement across multiple teams.":"Pengurus operasi yang mengetuai perancangan pengeluaran, penyelarasan pembekal dan penambahbaikan proses merentas pasukan.";
+    r.sections.experience[0].title=r.personal.headline;
+    r.sections.experience[0].description=en?"Led weekly production planning across three teams.\nIntroduced a shared dashboard for monitoring delivery performance.\nCoached team leads on escalation and handover standards.":"Mengetuai perancangan pengeluaran mingguan merentas tiga pasukan.\nMemperkenalkan papan pemuka bersama untuk memantau prestasi penghantaran.\nMembimbing ketua pasukan tentang piawaian eskalasi dan serahan.";
+  }
+  if(template==="fresh-graduate") {
+    r.personal={...r.personal,name:"Hana Ismail",headline:en?"Business Administration Graduate":"Graduan Pentadbiran Perniagaan",email:"hana@example.com"};
+    r.sections.summary[0].description=en?"Recent business administration graduate with internship experience in stock reporting, order tracking and team coordination.":"Graduan pentadbiran perniagaan dengan pengalaman latihan industri dalam pelaporan inventori, penjejakan pesanan dan penyelarasan pasukan.";
+    r.sections.experience[0].title=en?"Operations Intern":"Pelatih Operasi";
+    r.sections.experience[0].dates="2025 – 2026";
+    r.sections.education[0].dates="2023 – 2026";
+  }
+  if(template==="creative-professional") {
+    r.personal={...r.personal,name:"Maya Lee",headline:en?"Brand Designer":"Pereka Jenama",email:"maya@example.com"};
+    r.sections.summary[0].description=en?"Brand designer with experience in visual identities, digital campaigns and design systems for small businesses.":"Pereka jenama yang berpengalaman dalam identiti visual, kempen digital dan sistem reka bentuk untuk perniagaan kecil.";
+    r.sections.experience[0].title=r.personal.headline;
+    r.sections.experience[0].organization="Meridian Studio";
+    r.sections.experience[0].description=en?"Designed campaign assets for social and print.\nCreated reusable templates and maintained brand guidelines.\nCollaborated with writers to deliver consistent launch materials.":"Mereka bahan kempen untuk media sosial dan cetak.\nMembina templat dan menyelenggara panduan jenama.\nBekerjasama dengan penulis untuk menghasilkan bahan pelancaran yang seragam.";
+    r.sections.education[0].title=en?"Diploma in Graphic Design":"Diploma Reka Bentuk Grafik";
+    r.sections.skills[0].description="Figma, Adobe Illustrator, Adobe InDesign";
+    r.sections.projects=[{...blankEntry(),title:en?"Brand identity refresh":"Penyegaran identiti jenama",description:en?"Developed a visual system and campaign templates for a local retailer.":"Membangunkan sistem visual dan templat kempen untuk peruncit tempatan."}];
+  }
+  if(template!=="fresh-graduate") {
+    const technical=template==="engineering-blue"||template==="technical-engineer";
+    const creative=template==="creative-professional";
+    const previousRole=technical?(en?"Inspection Technician":"Juruteknik Pemeriksaan"):creative?(en?"Junior Designer":"Pereka Junior"):(en?"Operations Assistant":"Pembantu Operasi");
+    const previousWork=technical
+      ?(en?"Recorded dimensional checks and maintained inspection records.\nPrepared equipment and test documentation for routine inspections.":"Merekod pemeriksaan ukuran dan menyelenggara rekod pemeriksaan.\nMenyediakan peralatan dan dokumentasi ujian untuk pemeriksaan rutin.")
+      :creative
+      ?(en?"Prepared social graphics and production-ready artwork.\nOrganized project files and incorporated client feedback.":"Menyediakan grafik media sosial dan karya seni untuk pengeluaran.\nMenyusun fail projek dan memasukkan maklum balas pelanggan.")
+      :(en?"Tracked incoming orders and reconciled stock movements.\nPrepared daily exception reports for supervisors.":"Menjejak pesanan masuk dan menyelaraskan pergerakan stok.\nMenyediakan laporan pengecualian harian untuk penyelia.");
+    r.sections.experience.push({...blankEntry(),title:previousRole,organization:creative?"Cedar Design":"Cedar Services",dates:"2021 – 2023",description:previousWork});
+  }
+  r.sections.languages=[{...blankEntry(),title:en?"English and Malay":"Bahasa Inggeris dan Bahasa Melayu",description:en?"Professional working proficiency":"Kecekapan profesional"}];
   return r;
 }
 function object(value: unknown): Record<string, unknown> {

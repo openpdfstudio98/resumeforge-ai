@@ -278,8 +278,8 @@ test("gallery shows completed samples and filters to matching themes",async({pag
   await page.goto("/en/templates");
   const cards=page.locator(".template-card");
   await expect(cards).toHaveCount(templateKeys.length);
-  for (const card of await cards.all()) {
-    await expect(card.locator(".document-sheet text").first()).toContainText(/Alyssa Tan|Daniel Lim/);
+  for (const [index,template] of templateKeys.entries()) {
+    await expect(cards.nth(index).locator(".document-sheet text").first()).toHaveText(sampleResume("en",template).personal.name);
   }
   await page.getByRole("button",{name:"Technical",exact:true}).click();
   await expect(cards).toHaveCount(2);
