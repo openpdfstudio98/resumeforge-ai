@@ -2,6 +2,7 @@ import { articles } from "./content";
 import { site } from "./copy";
 import { atsCopy } from "./ats";
 import { labels, templates } from "./resume";
+import { galleryCopy } from "./template-gallery";
 import { photoCopy, work } from "./work-copy";
 
 export const deviceLanguages = ["ar","bg","bn","cs","da","de","el","es","fi","fr","he","hi","hr","hu","id","it","ja","kn","ko","lt","mr","nl","no","pl","pt","ro","ru","sk","sl","sv","ta","te","th","tr","uk","vi","zh","zh-Hant"] as const;
@@ -18,7 +19,7 @@ function strings(data:unknown):string[] {
   return [];
 }
 export const sourceMessages = [...new Set(strings([
-  site.en,work.en,photoCopy.en,articles.en,labels.en,atsCopy.en,extraCopy.en,
+  site.en,work.en,photoCopy.en,articles.en,labels.en,atsCopy.en,extraCopy.en,galleryCopy.en,
   ...Object.values(templates).map(template=>template.description.en),
 ]))];
 

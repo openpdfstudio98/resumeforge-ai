@@ -256,7 +256,7 @@ test("bundled Spanish works when browser translation is unavailable",async({page
 
 test("one click opens an editable portrait sample and switching themes keeps the draft",async({page})=>{
   await page.goto("/en");
-  await page.getByRole("link",{name:"Try this sample"}).click();
+  await page.getByRole("link",{name:"Try this sample",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
   await expect(page.locator(".document-sheet image")).toHaveCount(1);
   await page.getByLabel("Full name",{exact:true}).fill("Edited portrait");
@@ -268,7 +268,25 @@ test("one click opens an editable portrait sample and switching themes keeps the
   await expect(page.locator(".section-toggle").nth(1)).toHaveText("Work Experience");
   await expect(page.locator(".document-sheet image")).toHaveCount(1);
   await page.goto("/en/templates/engineering-blue");
-  await page.getByRole("link",{name:"Try this sample"}).click();
+  await page.getByRole("link",{name:"Try this sample",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Daniel Lim");
   await expect(page.locator(".section-toggle").nth(2)).toHaveText("Certifications");
+});
+
+
+test("gallery shows completed samples and filters to matching themes",async({page})=>{
+  await page.goto("/en/templates");
+  const cards=page.locator(".template-card");
+  await expect(cards).toHaveCount(templateKeys.length);
+  for (const card of await cards.all()) {
+    await expect(card.locator(".document-sheet text").first()).toContainText(/Alyssa Tan|Daniel Lim/);
+  }
+  await page.getByRole("button",{name:"Technical",exact:true}).click();
+  await expect(cards).toHaveCount(2);
+  await page.getByRole("button",{name:"With photo",exact:true}).click();
+  await expect(cards).toHaveCount(1);
+  await expect(cards.locator("svg image")).toHaveCount(1);
+  await page.getByRole("button",{name:"All styles",exact:true}).click();
+  await page.getByRole("link",{name:"Try this sample · Classic ATS",exact:true}).click();
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
 });

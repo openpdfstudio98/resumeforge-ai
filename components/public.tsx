@@ -1,40 +1,31 @@
 import { ArrowRight, Check, FileText, FolderOpen, LayoutTemplate, ScanLine, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { articles } from "../lib/content";
+import { galleryCopy, templateGroups } from "../lib/template-gallery";
+import { GalleryFilters } from "./gallery-filters";
+import { TemplateSample } from "./template-sample";
 import { Ui } from "./ui-language";
 import { extraCopy } from "../lib/ui-language";
 import { guideKeys, site, type NavKey } from "../lib/copy";
 import { demoPortraitPath, labels, sampleResume, templateKeys, templates, type Locale, type Template } from "../lib/resume";
 
-export function MiniResume({template}:{template:Template}) {
-  const accent=templates[template].color;
-  const center=template==="modern-executive"||template==="minimal-professional";
-  const portrait=template==="modern-portrait";
-  const engineering=template==="engineering-blue";
-  return <svg className="mini-resume" viewBox="0 0 172 225" aria-hidden="true">
-    <rect width="172" height="225" fill="#fff"/>
-    {(portrait||engineering||template==="modern-executive"||template==="creative-professional")&&<rect width="172" height="5" fill={accent}/>}
-    <rect x={center?47:20} y="25" width="78" height="8" rx="2" fill={accent}/>
-    <rect x={center?57:20} y="39" width="58" height="3" rx="1" fill="#63718A"/>
-    {portrait&&<image href={demoPortraitPath} x="117" y="20" width="35" height="35"/>}
-    <rect x={center?29:20} y="48" width={portrait?83:114} height="2.5" rx="1" fill="#A2AFC4"/>
-    {[67,107,152,187].map((y,index)=><g key={y}>
-      {(template==="fresh-graduate"||template==="creative-professional")&&<rect x="14" y={y-2} width="2" height="8" fill={accent}/>}
-      {engineering&&<rect x="18" y={y-3} width="136" height="10" rx="1" fill="#EAF1F7"/>}
-      <rect x="20" y={y} width={index%2?57:43} height="4" rx="1" fill={accent}/>
-      <rect x="20" y={y+9} width="132" height="2" rx="1" fill="#D5DCE7"/>
-      <rect x="20" y={y+16} width={index%2?96:126} height="3" rx="1" fill="#9FAEC5"/>
-      <rect x="20" y={y+23} width={index%2?115:80} height="3" rx="1" fill="#B6C1D2"/>
-    </g>)}
-  </svg>;
-}
-
 function TemplateCard({locale,template}:{locale:Locale;template:Template}) {
-  return <a className="template-card panel" href={`/${locale}/templates/${template}`}>
-    <div className={`template-figure ${template}`}><MiniResume template={template}/></div>
-    <div className="split"><h3>{templates[template].name}</h3><ArrowRight size={17}/></div>
-    <p><Ui>{templates[template].description[locale]}</Ui></p>
-  </a>;
+  const root=`/${locale}`;
+  const t=galleryCopy[locale];
+  return <article className="template-card panel">
+    <a className="template-preview-link" href={`${root}/templates/${template}`} aria-label={`${t.preview}: ${templates[template].name}`}>
+      <TemplateSample locale={locale} template={template}/>
+    </a>
+    <div className="template-card-copy">
+      <div className="split"><span className="pill"><Ui>{t.groups[templateGroups[template]]}</Ui></span><span className="hero-sample-format">A4</span></div>
+      <h3>{templates[template].name}</h3>
+      <p><Ui>{templates[template].description[locale]}</Ui></p>
+      <div className="template-card-actions">
+        <a className="text-link" href={`${root}/templates/${template}`}><Ui>{t.preview}</Ui><span className="sr-only"> · {templates[template].name}</span><ArrowRight size={15} aria-hidden="true"/></a>
+        <a className="btn" href={`${root}/builder?template=${template}&sample=1`}><Ui>{extraCopy[locale].trySample}</Ui><span className="sr-only"> · {templates[template].name}</span></a>
+      </div>
+    </div>
+  </article>;
 }
 function ResumeExample({locale}:{locale:Locale}) {
   const {personal,sections}=sampleResume(locale,"modern-portrait");
@@ -107,12 +98,13 @@ export function Home({locale}:{locale:Locale}) {
 }
 export function Gallery({locale,template}:{locale:Locale;template?:Template}) {
   const t=site[locale];
+  const gallery=galleryCopy[locale];
   if(template)return <section className="public-section detail">
-    <div><a className="text-link" href={`/${locale}/templates`}>← <Ui>{t.nav.templates}</Ui></a><h1>{templates[template].name}</h1><p><Ui>{templates[template].description[locale]}</Ui></p><a className="btn primary" href={`/${locale}/builder?template=${template}`}><Ui>{extraCopy[locale].use}</Ui><ArrowRight size={18}/></a>{(template==="modern-portrait"||template==="engineering-blue")&&<a className="btn" href={`/${locale}/builder?template=${template}&sample=1`}><Ui>{extraCopy[locale].trySample}</Ui></a>}<p className="muted small"><Ui>{t.free}</Ui></p></div>
-    <div className={`template-figure ${template}`}><MiniResume template={template}/></div>
+    <div><a className="text-link" href={`/${locale}/templates`}>← <Ui>{t.nav.templates}</Ui></a><h1>{templates[template].name}</h1><p><Ui>{templates[template].description[locale]}</Ui></p><a className="btn primary" href={`/${locale}/builder?template=${template}`}><Ui>{extraCopy[locale].use}</Ui><ArrowRight size={18}/></a><a className="btn" href={`/${locale}/builder?template=${template}&sample=1`}><Ui>{extraCopy[locale].trySample}</Ui></a><p className="muted small"><Ui>{t.free}</Ui></p></div>
+    <TemplateSample locale={locale} template={template} full/>
   </section>;
-  return <section className="public-section"><div className="eyebrow"><Ui>{t.eyebrow}</Ui></div><h1><Ui>{t.nav.templates}</Ui></h1><p><Ui>{t.copy.templates}</Ui></p>
-    <div className="template-grid">{templateKeys.map(key=><TemplateCard key={key} template={key} locale={locale}/>)}</div>
+  return <section className="public-section"><div className="eyebrow"><Ui>{t.nav.templates}</Ui></div><h1><Ui>{gallery.heading}</Ui></h1><p><Ui>{gallery.intro}</Ui></p>
+    <GalleryFilters locale={locale} cards={templateKeys.map(key=>({template:key,node:<TemplateCard template={key} locale={locale}/>}))}/>
   </section>;
 }
 export function Reading({locale,path,guide}:{locale:Locale;path:NavKey;guide?:typeof guideKeys[number]}) {
