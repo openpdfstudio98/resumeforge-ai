@@ -57,9 +57,10 @@ export function LocaleLink({locale,path}:{locale:Locale;path:string}) {
     } catch {if(!controller.signal.aborted)setStatus("failed");}
   }
   const filter=search.trim().toLowerCase();
+  const languageCode=(dictionary?.language??locale).toUpperCase();
   return <>
-    <button type="button" className="btn locale-btn" aria-label={t.button} aria-haspopup="dialog" onClick={()=>dialog.current?.showModal()}>
-      <Globe2 size={17}/><span>{t.button}</span><span className="language-code" translate="no">{(dictionary?.language??locale).toUpperCase()}</span>
+    <button type="button" className="btn locale-btn" aria-label={`${t.button} ${languageCode}`} aria-haspopup="dialog" onClick={()=>dialog.current?.showModal()}>
+      <Globe2 size={17}/><span>{t.button}</span><span className="language-code" translate="no">{languageCode}</span>
     </button>
     <dialog ref={dialog} className="language-dialog" aria-labelledby="language-title" onClose={()=>{operation.current?.abort();setStatus("idle");}}>
       <div className="split"><h2 id="language-title">{t.heading}</h2><button type="button" className="icon-btn" aria-label={t.close} onClick={()=>dialog.current?.close()}><X size={18}/></button></div>
