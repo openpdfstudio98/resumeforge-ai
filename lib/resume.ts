@@ -43,15 +43,15 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "midnight-executive":{name:"Midnight Executive",color:"#253550",font:"serif",description:{en:"A deep navy sidebar, serif headline and a refined experience timeline.",ms:"Sidebar biru gelap, tajuk serif dan garis masa pengalaman yang kemas."}},
   "silver-editorial":{name:"Silver Editorial",color:"#465469",font:"sans",description:{en:"A soft silver sidebar and a clean, detailed editorial layout.",ms:"Sidebar perak lembut dengan susun atur editorial yang kemas."}},
   "graphite-portfolio":{name:"Graphite Portfolio",color:"#363541",font:"sans",description:{en:"A charcoal sidebar gives creative projects and skills a strong contrast.",ms:"Sidebar arang gelap memberi kontras pada projek kreatif dan kemahiran."}},
-  "mono-grid":{name:"Mono Grid",color:"#292C34",font:"sans",description:{en:"An understated two-column grid with fine rules and a centered title.",ms:"Dua lajur monokrom dengan garis halus dan tajuk di tengah."}},
+  "mono-grid":{name:"Mono Grid",color:"#292C34",font:"sans",description:{en:"A streamlined single-column layout with crisp rules and a contemporary header.",ms:"Susun atur satu lajur monokrom dengan garis halus dan tajuk moden."}},
   "teal-timeline":{name:"Teal Timeline",color:"#006D70",font:"sans",description:{en:"A teal masthead and a clear visual timeline for experience and achievements.",ms:"Pengepala hijau kebiruan dan garis masa visual untuk pengalaman dan pencapaian."}},
   "bloom-studio":{name:"Bloom Studio",color:"#9B3D56",font:"sans",description:{en:"Blush masthead, a right-hand portrait and a soft rose sidebar for creative portfolios.",ms:"Pengepala merah jambu lembut, potret di kanan dan sidebar ros untuk portfolio kreatif."}},
   "violet-atelier":{name:"Violet Atelier",color:"#542F91",font:"sans",description:{en:"A violet colour-block header, geometric accents and a framed lavender sidebar.",ms:"Pengepala blok ungu, aksen geometri dan sidebar lavender berbingkai."}},
-  "ivory-editorial":{name:"Ivory Editorial",color:"#554734",font:"serif",description:{en:"A centered serif masthead, ivory paper tones and a narrow right-hand column.",ms:"Pengepala serif di tengah, tona gading dan lajur kanan yang ringkas."}},
+  "ivory-editorial":{name:"Ivory Editorial",color:"#554734",font:"serif",description:{en:"An elegant single-column editorial layout with a centered serif header.",ms:"Susun atur editorial satu lajur dengan pengepala serif di tengah."}},
   "onyx-gold":{name:"Onyx Gold",color:"#292C32",font:"serif",description:{en:"Charcoal sidebar, champagne-gold rules and a portrait for leadership profiles.",ms:"Sidebar arang, garisan emas lembut dan potret untuk profil kepimpinan."}},
   "aurora-minimal":{name:"Aurora Minimal",color:"#2E6B8A",font:"sans",description:{en:"Airy minimal layout with soft aurora accents.",ms:"Susun atur minimal dengan aksen aurora lembut."}},
   "executive-ledger":{name:"Executive Ledger",color:"#1F3864",font:"serif",description:{en:"Formal ledger-style executive resume.",ms:"Resume eksekutif gaya lejar formal."}},
-  "editorial-mono":{name:"Editorial Mono",color:"#2B2B2B",font:"mono",description:{en:"Monospace editorial two-column layout.",ms:"Susun atur editorial dua lajur monospace."}},
+  "editorial-mono":{name:"Editorial Mono",color:"#2B2B2B",font:"mono",description:{en:"A clean single-column editorial layout in monochrome.",ms:"Susun atur editorial satu lajur dalam monokrom."}},
   "canva-bloom":{name:"Canva Bloom",color:"#D94F70",font:"sans",description:{en:"Bright Canva-style creative template.",ms:"Templat kreatif gaya Canva yang cerah."}},
   "neon-grid":{name:"Neon Grid",color:"#0E7490",font:"sans",description:{en:"Tech-forward neon grid layout.",ms:"Susun atur grid neon moden."}},
   "paper-loom":{name:"Paper Loom",color:"#6B5B45",font:"serif",description:{en:"Warm paper tones with woven rules.",ms:"Tona kertas hangat dengan garis tenunan."}},
@@ -79,7 +79,7 @@ export function makeResume(locale: Locale, template: Template = "classic-ats"): 
     id:crypto.randomUUID(), title:locale === "en" ? "Untitled resume" : "Resume tanpa tajuk", locale,
     updated:Date.now(), personal:{name:"",headline:"",email:"",phone:"",location:"",website:""},
     order, sections:{summary:[],experience:[],education:[],skills:[],certifications:[],projects:[],languages:[],custom:[]},
-    template, color:templates[template].color, font:templates[template].font, size:10,
+    template, color:templates[template].color, font:templates[template].font, size:11,
   };
 }
 export function filled(entry: Entry) {
