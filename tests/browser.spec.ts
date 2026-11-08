@@ -1,10 +1,11 @@
+import { galleryOrder } from "../lib/template-gallery";
 import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { allPaths } from "../lib/seo";
 import { backup, sampleResume, templateKeys, templates } from "../lib/resume";
 
-test("all 42 localized pages and rendered internal navigation respond",async({page,request})=>{
+test("all localized pages and rendered internal navigation respond",async({page,request})=>{
   const links=new Set<string>();
   for(const locale of ["en","ms"]) {
     for(const path of allPaths) {
@@ -133,7 +134,7 @@ test("draft duplicate, backup, invalid import, restore, deletion and clear",asyn
   expect(await page.evaluate(()=>Object.keys(localStorage).filter(key=>key.startsWith("resumeforge:")))).toEqual([]);
 });
 
-test("six templates start successfully and layouts fit phone portrait and landscape",async({page})=>{
+test("all templates start successfully and layouts fit phone portrait and landscape",async({page})=>{
   for(const template of templateKeys) {
     await page.goto(`/en/templates/${template}`);
     await page.getByRole("link",{name:"Use this template"}).click();
@@ -174,7 +175,7 @@ test("keyboard and axe checks on landing, editor and ATS states",async({page})=>
 });
 
 test("optional resume photo stays local and appears in both downloads",async({page},info)=>{
-  await page.goto("/en/builder");
+  await page.goto("/en/builder?template=modern-portrait");
   await page.getByRole("button",{name:"New resume"}).click();
   await page.getByLabel("Full name",{exact:true}).fill("Photo QA");
   const photo=page.locator('input[type=file][accept*="image/jpeg"]');
@@ -203,6 +204,7 @@ test("optional resume photo stays local and appears in both downloads",async({pa
       expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Photo QA");
     } else {
       expect(execFileSync("unzip",["-Z1",file],{encoding:"utf8"})).toMatch(/word\/media\/.*\.jpg/);
+      expect(execFileSync("unzip",["-p",file,"word/document.xml"],{encoding:"utf8"})).toContain("<w:tbl>");
     }
   }
   await page.getByRole("button",{name:"Remove photo"}).click();
@@ -250,4 +252,62 @@ test("bundled Spanish works when browser translation is unavailable",async({page
   await page.getByRole("button",{name:"Nuevo currículum"}).click();
   await expect(page.getByLabel("Nombre completo",{exact:true})).toBeVisible();
   await expect(page.getByRole("button",{name:"Descargar PDF",exact:true})).toBeDisabled();
+});
+
+
+test("one click opens an editable portrait sample and switching themes keeps the draft",async({page})=>{
+  await page.goto("/en");
+  await page.getByRole("link",{name:"Try this sample",exact:true}).click();
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
+  await expect(page.locator(".document-sheet image")).toHaveCount(1);
+  await page.getByLabel("Full name",{exact:true}).fill("Edited portrait");
+  await page.getByRole("button",{name:"Design",exact:true}).click();
+  await expect(page.getByRole("combobox",{name:"Template",exact:true})).toHaveValue("modern-portrait");
+  await page.getByRole("combobox",{name:"Template",exact:true}).selectOption("engineering-blue");
+  await page.reload();
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Edited portrait");
+  await expect(page.locator(".section-toggle").nth(1)).toHaveText("Work Experience");
+  await expect(page.locator(".document-sheet image")).toHaveCount(1);
+  await page.goto("/en/templates/engineering-blue");
+  await page.getByRole("link",{name:"Try this sample",exact:true}).click();
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Daniel Lim");
+  await expect(page.locator(".section-toggle").nth(2)).toHaveText("Certifications");
+});
+
+
+test("gallery shows completed samples and filters to matching themes",async({page},info)=>{
+  await page.goto("/en/templates");
+  const cards=page.locator(".template-card");
+  await expect(cards).toHaveCount(templateKeys.length);
+  for (const [index,template] of galleryOrder.entries()) {
+    await expect(cards.nth(index).locator(".document-sheet text").first()).toHaveText(sampleResume("en",template).personal.name);
+  }
+  await page.getByRole("button",{name:"Premium collection",exact:true}).click();
+  await expect(cards).toHaveCount(6);
+  await expect(cards.locator("svg image")).toHaveCount(5);
+  await page.getByRole("button",{name:"Technical",exact:true}).click();
+  await expect(cards).toHaveCount(2);
+  await page.getByRole("button",{name:"With photo",exact:true}).click();
+  await expect(cards).toHaveCount(6);
+  await expect(cards.locator("svg image")).toHaveCount(6);
+  await page.getByRole("button",{name:"All styles",exact:true}).click();
+  await page.getByRole("link",{name:"Try this sample · Classic ATS",exact:true}).click();
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
+  await page.goto("/en/templates/teal-timeline");
+  await page.getByRole("link",{name:"Try this sample",exact:true}).click();
+  await expect(page.locator(".document-sheet image[clip-path]")).toHaveCount(1);
+  for (const format of ["PDF","DOCX"]) {
+    const wait=page.waitForEvent("download");
+    await page.getByRole("button",{name:`Download ${format}`}).click();
+    const file=info.outputPath(`teal-timeline.${format.toLowerCase()}`);
+    await (await wait).saveAs(file);
+    if(format==="PDF") {
+      expect(execFileSync("pdfimages",["-list",file],{encoding:"utf8"})).toMatch(/image\s+\d+\s+\d+/);
+      expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Alyssa Tan");
+    } else {
+      const xml=execFileSync("unzip",["-p",file,"word/document.xml"],{encoding:"utf8"});
+      expect(xml).toContain('w:fill="006D70"');
+      expect(xml).toContain("<w:drawing>");
+    }
+  }
 });

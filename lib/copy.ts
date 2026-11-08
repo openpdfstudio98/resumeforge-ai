@@ -10,7 +10,7 @@ export const site = {
     accent:"gets to the point.",
     start:"Build my resume", browse:"Explore templates", local:"Private by design", noAccount:"No account required", free:"Free PDF & Word export",
     toolkit:"Everything you need to apply", toolkitCopy:"Write, refine and export your resume in one workspace.", gallery:"Find your starting point",
-    copy:{builder:"Write and format your resume with a live A4 preview.",ats:"Check essential sections and compare keywords with a job description.",resumes:"Manage drafts and save JSON backups on your device.",templates:"Choose from six professional A4 layouts."},
+    copy:{builder:"Write and format your resume with a live A4 preview.",ats:"Check essential sections and compare keywords with a job description.",resumes:"Manage drafts and save JSON backups on your device.",templates:"Choose a professional A4 layout."},
     workspace:"WORKSPACE", resources:"RESOURCES", menu:"Menu", skip:"Skip to content",
   },
   ms: {
@@ -22,7 +22,7 @@ export const site = {
     accent:"terus kepada isi.",
     start:"Bina resume saya", browse:"Terokai templat", local:"Utamakan privasi", noAccount:"Tanpa akaun", free:"Eksport PDF & Word percuma",
     toolkit:"Sedia untuk memohon kerja", toolkitCopy:"Tulis, kemas kini dan eksport resume dalam satu ruang kerja.", gallery:"Pilih templat untuk bermula",
-    copy:{builder:"Tulis dan format resume dengan pratonton A4 masa nyata.",ats:"Semak bahagian penting dan bandingkan kata kunci dengan huraian kerja.",resumes:"Urus draf dan simpan sandaran JSON pada peranti anda.",templates:"Pilih daripada enam susun atur A4 profesional."},
+    copy:{builder:"Tulis dan format resume dengan pratonton A4 masa nyata.",ats:"Semak bahagian penting dan bandingkan kata kunci dengan huraian kerja.",resumes:"Urus draf dan simpan sandaran JSON pada peranti anda.",templates:"Pilih susun atur A4 profesional."},
     workspace:"RUANG KERJA", resources:"SUMBER", menu:"Menu", skip:"Langkau ke kandungan",
   },
 } satisfies Record<Locale,unknown>;
