@@ -8,7 +8,7 @@ export type SectionKey = typeof sectionKeys[number];
 export const entryFields = ["title", "organization", "dates", "description"] as const;
 export const personalFields = ["name", "headline", "email", "phone", "location", "website"] as const;
 export type Entry = Record<typeof entryFields[number], string> & { id: string };
-export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold", "aurora-minimal", "executive-ledger", "editorial-mono", "canva-bloom", "neon-grid", "paper-loom", "obsidian-ink", "sage-column", "cobalt-slate", "rose-atelier", "heritage-classic", "signature-minimal", "academic-scholar", "professional-stripe", "modern-coral", "studio-pastel", "executive-timeline", "creative-spectrum"] as const;
+export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold", "aurora-minimal", "executive-ledger", "editorial-mono", "canva-bloom", "neon-grid", "paper-loom", "obsidian-ink", "sage-column", "cobalt-slate", "rose-atelier", "heritage-classic", "signature-minimal", "academic-scholar", "professional-stripe", "modern-coral", "studio-pastel", "executive-timeline", "creative-spectrum", "modern-ink", "classic-frame", "pastel-dawn", "colour-confetti", "contemporary-split", "bold-portrait", "creative-burst", "executive-focus", "industrial-mono", "academic-essential"] as const;
 export type Template = typeof templateKeys[number];
 export const fonts = ["sans", "serif", "mono"] as const;
 export type Font = typeof fonts[number];
@@ -67,6 +67,16 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "studio-pastel":{name:"Studio Pastel",color:"#725F8F",font:"sans",description:{en:"A soft pastel creative resume with a light sidebar.",ms:"Resume kreatif berwarna pastel dengan lajur sisi cerah."}},
   "executive-timeline":{name:"Executive Timeline",color:"#263B52",font:"serif",description:{en:"A polished executive design with a structured timeline.",ms:"Reka bentuk eksekutif dengan garis masa yang tersusun."}},
   "creative-spectrum":{name:"Creative Spectrum",color:"#226D75",font:"sans",description:{en:"A creative layout with a confident colour header.",ms:"Susun atur kreatif dengan pengepala warna yang menyerlah."}},
+  "modern-ink":{name:"Modern Ink",color:"#243B53",font:"sans",description:{en:"A confident header and clean single-column content.",ms:"Pengepala moden dengan kandungan satu lajur."}},
+  "classic-frame":{name:"Classic Frame",color:"#554B40",font:"serif",description:{en:"A timeless serif design with a refined framed header.",ms:"Reka bentuk serif klasik dengan bingkai kemas."}},
+  "pastel-dawn":{name:"Pastel Dawn",color:"#895E76",font:"sans",description:{en:"A warm pastel header with a readable single-column layout.",ms:"Pengepala pastel dengan susun atur satu lajur."}},
+  "colour-confetti":{name:"Colour Confetti",color:"#34517D",font:"sans",description:{en:"A playful dotted accent paired with a clean single column.",ms:"Aksen titik berwarna dan susun atur satu lajur."}},
+  "contemporary-split":{name:"Contemporary Split",color:"#236B75",font:"sans",description:{en:"A modern split layout with a light sidebar and clear sections.",ms:"Susun atur moden dua lajur dengan sidebar cerah."}},
+  "bold-portrait":{name:"Bold Portrait",color:"#354366",font:"sans",description:{en:"A strong coloured header with an optional portrait.",ms:"Pengepala berwarna dengan potret pilihan."}},
+  "creative-burst":{name:"Creative Burst",color:"#A45431",font:"sans",description:{en:"A creative layout with a warm header and geometric accents.",ms:"Susun atur kreatif dengan aksen geometri hangat."}},
+  "executive-focus":{name:"Executive Focus",color:"#384C43",font:"serif",description:{en:"A sophisticated sidebar and timeline for leadership roles.",ms:"Sidebar dan garis masa kemas untuk jawatan kepimpinan."}},
+  "industrial-mono":{name:"Industrial Mono",color:"#32363A",font:"mono",description:{en:"A monochrome editorial design with a compact sidebar.",ms:"Reka bentuk editorial monokrom dengan sidebar ringkas."}},
+  "academic-essential":{name:"Academic Essential",color:"#37465D",font:"serif",description:{en:"A restrained academic layout with space for detailed experience.",ms:"Susun atur akademik ringkas untuk pengalaman terperinci."}},
 };
 export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
