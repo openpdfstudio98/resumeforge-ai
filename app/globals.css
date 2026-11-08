@@ -114,6 +114,10 @@ button:disabled{cursor:default;opacity:.48}
 .template-figure.graphite-portfolio{background:radial-gradient(at 30% 10%,#f1e9e3,#d6cbd0)}
 .template-figure.mono-grid{background:radial-gradient(at 65% 12%,#fbf9f6,#e7e3dc)}
 .template-figure.teal-timeline{background:radial-gradient(at 50% 12%,#e9f7f4,#c2e2de)}
+.template-figure.bloom-studio{background:radial-gradient(at 35% 12%,#fff5f4,#efd0d9)}
+.template-figure.violet-atelier{background:radial-gradient(at 35% 12%,#f9f5ff,#ded0f0)}
+.template-figure.ivory-editorial{background:radial-gradient(at 35% 12%,#fdf9f1,#e8ddca)}
+.template-figure.onyx-gold{background:radial-gradient(at 35% 12%,#eee9df,#cec6b8)}
 .detail{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:60vh}
 .detail h1,.detail p,.detail .btn{margin:14px 0 0}
 .detail .btn+.btn{margin-inline-start:8px}

@@ -282,31 +282,36 @@ test("gallery shows completed samples and filters to matching themes",async({pag
   for (const [index,template] of galleryOrder.entries()) {
     await expect(cards.nth(index).locator(".document-sheet text").first()).toHaveText(sampleResume("en",template).personal.name);
   }
+  await page.getByRole("button",{name:"Studio collection",exact:true}).click();
+  await expect(cards).toHaveCount(4);
+  await expect(cards.locator("svg image")).toHaveCount(3);
   await page.getByRole("button",{name:"Premium collection",exact:true}).click();
   await expect(cards).toHaveCount(6);
   await expect(cards.locator("svg image")).toHaveCount(5);
   await page.getByRole("button",{name:"Technical",exact:true}).click();
   await expect(cards).toHaveCount(2);
   await page.getByRole("button",{name:"With photo",exact:true}).click();
-  await expect(cards).toHaveCount(6);
-  await expect(cards.locator("svg image")).toHaveCount(6);
+  await expect(cards).toHaveCount(9);
+  await expect(cards.locator("svg image")).toHaveCount(9);
   await page.getByRole("button",{name:"All styles",exact:true}).click();
   await page.getByRole("link",{name:"Try this sample · Classic ATS",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
-  await page.goto("/en/templates/teal-timeline");
+  await page.goto("/en/templates/bloom-studio");
   await page.getByRole("link",{name:"Try this sample",exact:true}).click();
-  await expect(page.locator(".document-sheet image[clip-path]")).toHaveCount(1);
+  const portrait=page.locator(".document-sheet image[clip-path]");
+  await expect(portrait).toHaveCount(1);
+  expect(Number(await portrait.getAttribute("x"))).toBeGreaterThan(400);
   for (const format of ["PDF","DOCX"]) {
     const wait=page.waitForEvent("download");
     await page.getByRole("button",{name:`Download ${format}`}).click();
-    const file=info.outputPath(`teal-timeline.${format.toLowerCase()}`);
+    const file=info.outputPath(`bloom-studio.${format.toLowerCase()}`);
     await (await wait).saveAs(file);
     if(format==="PDF") {
       expect(execFileSync("pdfimages",["-list",file],{encoding:"utf8"})).toMatch(/image\s+\d+\s+\d+/);
-      expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Alyssa Tan");
+      expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Maya Lee");
     } else {
       const xml=execFileSync("unzip",["-p",file,"word/document.xml"],{encoding:"utf8"});
-      expect(xml).toContain('w:fill="006D70"');
+      expect(xml).toContain('w:fill="F7DCE4"');
       expect(xml).toContain("<w:drawing>");
     }
   }

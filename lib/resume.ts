@@ -8,7 +8,7 @@ export type SectionKey = typeof sectionKeys[number];
 export const entryFields = ["title", "organization", "dates", "description"] as const;
 export const personalFields = ["name", "headline", "email", "phone", "location", "website"] as const;
 export type Entry = Record<typeof entryFields[number], string> & { id: string };
-export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline"] as const;
+export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold"] as const;
 export type Template = typeof templateKeys[number];
 export const fonts = ["sans", "serif", "mono"] as const;
 export type Font = typeof fonts[number];
@@ -45,6 +45,10 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "graphite-portfolio":{name:"Graphite Portfolio",color:"#363541",font:"sans",description:{en:"A charcoal sidebar gives creative projects and skills a strong contrast.",ms:"Sidebar arang gelap memberi kontras pada projek kreatif dan kemahiran."}},
   "mono-grid":{name:"Mono Grid",color:"#292C34",font:"sans",description:{en:"An understated two-column grid with fine rules and a centered title.",ms:"Dua lajur monokrom dengan garis halus dan tajuk di tengah."}},
   "teal-timeline":{name:"Teal Timeline",color:"#006D70",font:"sans",description:{en:"A teal masthead and a clear visual timeline for experience and achievements.",ms:"Pengepala hijau kebiruan dan garis masa visual untuk pengalaman dan pencapaian."}},
+  "bloom-studio":{name:"Bloom Studio",color:"#9B3D56",font:"sans",description:{en:"Blush masthead, a right-hand portrait and a soft rose sidebar for creative portfolios.",ms:"Pengepala merah jambu lembut, potret di kanan dan sidebar ros untuk portfolio kreatif."}},
+  "violet-atelier":{name:"Violet Atelier",color:"#542F91",font:"sans",description:{en:"A violet colour-block header, geometric accents and a framed lavender sidebar.",ms:"Pengepala blok ungu, aksen geometri dan sidebar lavender berbingkai."}},
+  "ivory-editorial":{name:"Ivory Editorial",color:"#554734",font:"serif",description:{en:"A centered serif masthead, ivory paper tones and a narrow right-hand column.",ms:"Pengepala serif di tengah, tona gading dan lajur kanan yang ringkas."}},
+  "onyx-gold":{name:"Onyx Gold",color:"#292C32",font:"serif",description:{en:"Charcoal sidebar, champagne-gold rules and a portrait for leadership profiles.",ms:"Sidebar arang, garisan emas lembut dan potret untuk profil kepimpinan."}},
 };
 export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
@@ -74,6 +78,7 @@ export function filled(entry: Entry) {
 export function sampleResume(locale: Locale, template: Template): Resume {
   const r = makeResume(locale, template);
   const en = locale === "en";
+  const creative=["creative-professional","citrus-studio","graphite-portfolio","bloom-studio","violet-atelier"].includes(template);
   r.personal = {name:"Alyssa Tan",headline:en?"Operations Coordinator":"Penyelaras Operasi",email:"alyssa@example.com",phone:"+60 12 345 6789",location:"Selangor, Malaysia",website:""};
   r.sections.summary = [{...blankEntry(),description:en?"Operations coordinator focused on stock accuracy, process documentation and cross-team planning.":"Penyelaras operasi yang memberi tumpuan kepada ketepatan stok, dokumentasi proses dan perancangan pasukan."}];
   r.sections.experience = [{...blankEntry(),title:r.personal.headline,organization:"Meridian Works",dates:"2023 – 2026",description:en?"Coordinated weekly inventory reviews across three teams.\nMaintained order tracking and documented handover procedures.":"Menyelaras semakan inventori mingguan merentas tiga pasukan.\nMenyelenggara penjejakan pesanan dan mendokumenkan proses serahan."}];
@@ -89,7 +94,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
     r.sections.experience=[{...r.sections.experience[0],title:r.personal.headline,description:en?"Reviewed dimensional and pressure test reports for industrial valves.":"Menyemak laporan ukuran dan ujian tekanan bagi injap industri."}];
     r.sections.education=[{...r.sections.education[0],title:en?"Diploma in Mechanical Engineering":"Diploma Kejuruteraan Mekanikal"}];
   }
-  if(template==="modern-executive"||template==="midnight-executive") {
+  if(template==="modern-executive"||template==="midnight-executive"||template==="onyx-gold") {
     r.personal={...r.personal,name:"Nadia Rahman",headline:en?"Operations Manager":"Pengurus Operasi",email:"nadia@example.com"};
     r.sections.summary[0].description=en?"Operations manager who leads production planning, vendor coordination and process improvement across multiple teams.":"Pengurus operasi yang mengetuai perancangan pengeluaran, penyelarasan pembekal dan penambahbaikan proses merentas pasukan.";
     r.sections.experience[0].title=r.personal.headline;
@@ -102,7 +107,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
     r.sections.experience[0].dates="2025 – 2026";
     r.sections.education[0].dates="2023 – 2026";
   }
-  if(template==="creative-professional"||template==="citrus-studio"||template==="graphite-portfolio") {
+  if(creative) {
     r.personal={...r.personal,name:"Maya Lee",headline:en?"Brand Designer":"Pereka Jenama",email:"maya@example.com"};
     r.sections.summary[0].description=en?"Brand designer with experience in visual identities, digital campaigns and design systems for small businesses.":"Pereka jenama yang berpengalaman dalam identiti visual, kempen digital dan sistem reka bentuk untuk perniagaan kecil.";
     r.sections.experience[0].title=r.personal.headline;
@@ -114,7 +119,6 @@ export function sampleResume(locale: Locale, template: Template): Resume {
   }
   if(template!=="fresh-graduate") {
     const technical=template==="engineering-blue"||template==="technical-engineer";
-    const creative=template==="creative-professional"||template==="citrus-studio"||template==="graphite-portfolio";
     const previousRole=technical?(en?"Inspection Technician":"Juruteknik Pemeriksaan"):creative?(en?"Junior Designer":"Pereka Junior"):(en?"Operations Assistant":"Pembantu Operasi");
     const previousWork=technical
       ?(en?"Recorded dimensional checks and maintained inspection records.\nPrepared equipment and test documentation for routine inspections.":"Merekod pemeriksaan ukuran dan menyelenggara rekod pemeriksaan.\nMenyediakan peralatan dan dokumentasi ujian untuk pemeriksaan rutin.")
@@ -125,7 +129,6 @@ export function sampleResume(locale: Locale, template: Template): Resume {
   }
   r.sections.languages=[{...blankEntry(),title:en?"English and Malay":"Bahasa Inggeris dan Bahasa Melayu",description:en?"Professional working proficiency":"Kecekapan profesional"}];
   if(premiumStyle(template)) {
-    const creative=template==="citrus-studio"||template==="graphite-portfolio";
     r.personal.website=creative?"maya.example.com":"portfolio.example.com";
     r.sections.summary[0].description+=creative
       ?(en?" Builds practical brand toolkits that help teams launch and publish confidently across channels.":" Membina kit panduan jenama yang memudahkan pasukan menerbitkan bahan secara konsisten di pelbagai saluran.")
@@ -146,6 +149,12 @@ export function sampleResume(locale: Locale, template: Template): Resume {
       title:creative?(en?"Visual Design Foundations":"Asas Reka Bentuk Visual"):(en?"Process Improvement Foundations":"Asas Penambahbaikan Proses"),
       organization:"Meridian Learning",dates:"2025",
     }];
+  }
+  if(template==="violet-atelier") {
+    r.personal={...r.personal,name:"Sofia Lim",email:"sofia@example.com",website:"sofia.example.com"};
+  }
+  if(template==="ivory-editorial") {
+    r.personal={...r.personal,name:"Hannah Wong",email:"hannah@example.com"};
   }
   return r;
 }

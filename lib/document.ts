@@ -122,8 +122,13 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   const design=premiumStyle(resume.template)!;
   const sideWidth=174;
   const padding=24;
-  const mainX=sideWidth+30;
-  const mainWidth=a4.width-mainX-29;
+  const sideX=design.rightSidebar?a4.width-sideWidth:0;
+  const mainX=design.rightSidebar?29:sideWidth+30;
+  const mainWidth=a4.width-sideWidth-59;
+  const panelInset=design.framed?12:0;
+  const panelWidth=sideWidth-2*panelInset;
+  const trim=design.trim??resume.color;
+  const filled=design.masthead==="filled";
   const top=34;
   const titleTop=design.ornaments?54:top;
   const bottom=a4.height-31;
@@ -135,8 +140,8 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   function ensurePage(index:number) {
     while(pages.length<=index) {
       pages.push({lines:[],marks:[
-        {x:0,y:0,width:sideWidth,height:a4.height,color:design.sidebar},
-        {x:sideWidth,y:0,width:0.7,height:a4.height,color:design.sidebar==="#FFFFFF"?"#B6BBC4":design.sidebar},
+        {x:sideX+panelInset,y:panelInset,width:panelWidth,height:a4.height-2*panelInset,color:design.sidebar},
+        {x:design.rightSidebar?sideX+panelInset:sideX+sideWidth-panelInset,y:panelInset,width:0.7,height:a4.height-2*panelInset,color:design.trim??(design.sidebar==="#FFFFFF"?"#B6BBC4":design.sidebar)},
       ]});
     }
     return pages[index];
@@ -153,37 +158,46 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
 
   const first=ensurePage(0);
   const fullHeader=design.masthead!=="none";
-  const titleInset=design.masthead==="filled"&&resume.photo?mainX:padding;
-  const titleWidth=fullHeader?a4.width-titleInset-padding:mainWidth;
+  const photoInHeader=filled&&Boolean(resume.photo);
+  const titleInset=photoInHeader&&!design.rightSidebar?mainX:padding;
+  const headerRight=photoInHeader&&design.rightSidebar?sideX-12:a4.width-padding;
+  const titleWidth=fullHeader?headerRight-titleInset:mainWidth;
   const titleBlocks=title.map(block=>measure(block,titleWidth,false));
   const titleBottom=titleTop+titleBlocks.reduce((height,block)=>height+block.height*block.lines.length+3,0)+14;
-  const headerBottom=fullHeader?Math.max(titleBottom,design.masthead==="filled"&&resume.photo?112:0):0;
-  if(design.masthead==="filled") {
-    first.marks.push({x:0,y:0,width:a4.width,height:headerBottom,color:readable(resume.color)});
+  const headerBottom=fullHeader?Math.max(titleBottom,photoInHeader?112:0):0;
+  if(filled) {
+    first.marks.push({x:0,y:0,width:a4.width,height:headerBottom,color:design.mastheadFill??readable(resume.color)});
   } else if(design.masthead==="rule") {
-    first.marks.push({x:0,y:0,width:a4.width,height:headerBottom,color:"#FFFFFF"},{x:padding,y:headerBottom,width:a4.width-2*padding,height:1,color:"#9A9FA8"});
+    first.marks.push({x:0,y:0,width:a4.width,height:headerBottom,color:design.mastheadFill??"#FFFFFF"},{x:padding,y:headerBottom,width:a4.width-2*padding,height:1,color:design.trim??"#9A9FA8"});
   } else {
-    first.marks.push({x:sideWidth,y:0,width:a4.width-sideWidth,height:5,color:resume.color});
+    first.marks.push({x:design.rightSidebar?0:sideWidth,y:0,width:a4.width-sideWidth,height:5,color:trim});
   }
-  if(design.ornaments)first.dots=[
+  if(design.ornaments==="citrus")first.dots=[
     {x:a4.width-22,y:15,radius:22,color:"#FFD467"},
     {x:a4.width-57,y:18,radius:12,color:"#DAF1FB"},
     {x:a4.width-20,y:48,radius:5,color:"#E3A13B"},
   ];
+  if(design.ornaments==="violet") {
+    first.marks.push(
+      {x:a4.width-112,y:0,width:112,height:9,color:"#A481D8"},
+      {x:a4.width-72,y:9,width:72,height:8,color:"#DCCBF5"},
+    );
+    first.dots=[{x:a4.width-31,y:29,radius:11,color:"#BFA5E8"},{x:a4.width-57,y:34,radius:4,color:"#E8DBF8"}];
+  }
   let titleY=titleTop;
   for(const block of titleBlocks) {
     for(const line of block.lines) {
       const x=design.masthead==="rule"?(a4.width-line.width)/2:fullHeader?titleInset:mainX;
-      first.lines.push({...line,x,y:titleY+block.size,size:block.size,bold:block.bold,color:design.masthead==="filled"?"#FFFFFF":block.color});
+      first.lines.push({...line,x,y:titleY+block.size,size:block.size,bold:block.bold,color:filled&&!design.mastheadFill?"#FFFFFF":block.color});
       titleY+=block.height;
     }
     titleY+=3;
   }
   let sideStart=headerBottom?headerBottom+22:top;
   if(resume.photo) {
-    const inMasthead=design.masthead==="filled";
-    first.photo={x:inMasthead?padding:(sideWidth-photoSize)/2,y:inMasthead?23:sideStart,data:resume.photo,round:true};
-    if(!inMasthead)sideStart+=photoSize+15;
+    const photoX=photoInHeader&&!design.rightSidebar&&!design.trim?padding:sideX+(sideWidth-photoSize)/2;
+    first.photo={x:photoX,y:photoInHeader?23:sideStart,data:resume.photo,round:true};
+    if(!photoInHeader)sideStart+=photoSize+15;
   }
   function place(lane:Block[],x:number,width:number,start:number,inSidebar:boolean) {
     const measured=lane.map(block=>{
@@ -201,11 +215,11 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
         if(y+block.height+(block.role==="heading"&&lineIndex===0?2:0)>bottom){index++;y=top;}
         const page=ensurePage(index);
         if(block.role==="heading"&&lineIndex===0) {
-          page.marks.push({x,y:y-3,width,height:0.55,color:inSidebar?design.sideInk:"#B9C5CF"});
+          page.marks.push({x,y:y-3,width,height:0.55,color:inSidebar?design.trim??design.sideInk:design.trim??"#B9C5CF"});
           y+=2;
         }
         if(block.indent&&block.role==="title"&&lineIndex===0) {
-          (page.dots??=[]).push({x:x+3,y:y+block.size-3,radius:2.4,color:resume.color});
+          (page.dots??=[]).push({x:x+3,y:y+block.size-3,radius:2.4,color:trim});
         }
         if(block.indent)page.marks.push({x:x+2.6,y,width:0.65,height:block.height,color:"#C6D2DC"});
         if(line.text)page.lines.push({...line,x:x+block.indent,y:y+block.size,size:block.size,color:block.color,bold:block.bold});
@@ -214,7 +228,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
     }
   }
   place(body,mainX,mainWidth,headerBottom?headerBottom+17:Math.max(top,titleY+7),false);
-  place(side,padding,sideWidth-padding*2,sideStart,true);
+  place(side,sideX+padding,sideWidth-padding*2,sideStart,true);
   return pages;
 }
 
