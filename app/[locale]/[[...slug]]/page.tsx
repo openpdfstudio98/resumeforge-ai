@@ -23,7 +23,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata> {
   return {
     title,description,robots:{index:publicPage&&indexable(),follow:true},
     alternates:origin&&publicPage ? {canonical:`${origin}/${locale}${suffix}`,languages:{en:`${origin}/en${suffix}`,ms:`${origin}/ms${suffix}`,"x-default":`${origin}/en${suffix}`}} : undefined,
-    openGraph:{title:`${title} | ResumeForge AI`,description,type:"website",siteName:"ResumeForge AI",locale:locale==="en"?"en_US":"ms_MY",alternateLocale:[locale==="en"?"ms_MY":"en_US"],url:origin?`${origin}/${locale}${suffix}`:undefined},
+    openGraph:{title:`${title} | Civora`,description,type:"website",siteName:"Civora",locale:locale==="en"?"en_US":undefined,url:origin?`${origin}/${locale}${suffix}`:undefined},
     twitter:{card:"summary",title,description},
   };
 }
@@ -34,7 +34,7 @@ export default async function Page({params}:Props) {
   const [route,key]=path.split("/");
   const sidebar=workRoutes.includes(route as WorkRoute);
   const origin=siteOrigin();
-  const structured=origin&&!path ? {"@context":"https://schema.org","@type":"WebApplication",name:"ResumeForge AI",url:`${origin}/${locale}`,inLanguage:locale,applicationCategory:"BusinessApplication",operatingSystem:"Any",offers:{"@type":"Offer",price:"0",priceCurrency:"USD"}} : undefined;
+  const structured=origin&&!path ? {"@context":"https://schema.org","@type":"WebApplication",name:"Civora",url:`${origin}/${locale}`,inLanguage:locale,applicationCategory:"BusinessApplication",operatingSystem:"Any",offers:{"@type":"Offer",price:"0",priceCurrency:"USD"}} : undefined;
   return <Shell locale={locale} path={path} sidebar={sidebar}>
     {structured&&<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/>}
     {!path?<Home locale={locale}/>:sidebar?<Workspace locale={locale} route={route as WorkRoute}/>

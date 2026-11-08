@@ -26,7 +26,7 @@ test("editor covers all fields, reorder, live preview, autosave and interface la
   await page.goto("/en/builder");
   await page.getByRole("button",{name:"New resume"}).click();
   await expect(page.getByRole("button",{name:"Download PDF"})).toBeDisabled();
-  const personal={"Resume title":"QA draft","Full name":"Nur QA","Professional title":"Engineer","Email":"nur@example.com","Phone":"+60 12 345 6789","City / region":"Shah Alam","Website or LinkedIn URL":"https://example.com"};
+  const personal={"Resume title":"QA draft","Full name":"Nur QA","Professional title":"Engineer","Email":"nur@example.com","Phone":"+1 202 555 0147","City / region":"New York","Website or LinkedIn URL":"https://example.com"};
   for(const [name,value] of Object.entries(personal))await page.getByLabel(name,{exact:true}).fill(value);
   for(const [section,label] of [["Professional Summary","Professional summary"],["Skills","Skills (separate with commas or new lines)"]]) {
     await page.getByRole("button",{name:section,exact:true}).click();
@@ -113,7 +113,7 @@ test("draft duplicate, backup, invalid import, restore, deletion and clear",asyn
   await page.goto("/en/resumes");
   const input=page.locator('input[type=file]');
   await input.setInputFiles({name:"bad.json",mimeType:"application/json",buffer:Buffer.from("{}")});
-  await expect(page.getByRole("status").filter({hasText:"valid ResumeForge"})).toBeVisible();
+  await expect(page.getByRole("status").filter({hasText:"valid Civora"})).toBeVisible();
   const resume=sampleResume("en","classic-ats");
   await input.setInputFiles({name:"good.json",mimeType:"application/json",buffer:Buffer.from(backup([resume]))});
   await expect(page.locator(".draft")).toHaveCount(1);
@@ -124,7 +124,7 @@ test("draft duplicate, backup, invalid import, restore, deletion and clear",asyn
   await expect(page.locator(".draft")).toHaveCount(1);
   const waiting=page.waitForEvent("download");
   await page.getByRole("button",{name:"Back up all resumes"}).click();
-  expect((await waiting).suggestedFilename()).toBe("ResumeForge-backup.json");
+  expect((await waiting).suggestedFilename()).toBe("Civora-backup.json");
   await page.getByRole("button",{name:/^Delete ·/}).click();
   await page.getByRole("button",{name:"Confirm",exact:true}).click();
   await expect(page.locator(".draft")).toHaveCount(0);

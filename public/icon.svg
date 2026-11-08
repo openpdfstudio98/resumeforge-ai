@@ -7,6 +7,6 @@
   <rect x="2" y="2" width="60" height="60" rx="17" fill="url(#ink)"/>
   <path d="M19 13h19l9 9v24a5 5 0 0 1-5 5H20a5 5 0 0 1-5-5V17a4 4 0 0 1 4-4Z" fill="#fff"/>
   <path d="M37 13v8a2 2 0 0 0 2 2h8" fill="none" stroke="#C2C9FF" stroke-width="2"/>
-  <path d="M24 44V26h8a4.5 4.5 0 0 1 0 9h-8m7 0 6 9" fill="none" stroke="#343EAB" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M37 29a7.5 7.5 0 1 0 0 12" fill="none" stroke="#343EAB" stroke-width="3.6" stroke-linecap="round"/>
   <circle cx="48" cy="47" r="5.5" fill="#EBC275" stroke="#5143CB" stroke-width="2"/>
 </svg>

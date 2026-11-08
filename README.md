@@ -1,6 +1,6 @@
-# ResumeForge AI
+# Civora
 
-A bilingual, local-first resume builder for Malaysia and global applicants. Requires Node.js 24.
+A bilingual, local-first resume builder for job seekers worldwide. Requires Node.js 24.
 
 ```sh
 npm ci
@@ -16,7 +16,7 @@ Open http://localhost:3000/en or http://localhost:3000/ms. To test the productio
 ## Documents and privacy
 
 - The A4 preview and PDF share the same measured text layout. PDF uses embedded open-source fonts derived from Liberation and selectable text. V1's bundled PDF fonts target Latin-script English and Bahasa Melayu. DOCX uses native paragraphs and standard editable fonts. Its page breaks can vary by Word processor.
-- Drafts and a rolling previous save live in local storage. Import accepts versioned ResumeForge JSON. Import creates independent copies. Deleting one draft also clears the rolling recovery copy. Deleting all removes both local keys. Move work between devices with JSON.
+- Drafts and a rolling previous save live in local storage. Import accepts versioned Civora JSON. Import creates independent copies. Deleting one draft also clears the rolling recovery copy. Deleting all removes both local keys. Move work between devices with JSON.
 - Resume data and pasted job descriptions are processed in the browser. There are no user accounts, external content processors, analytics or ad scripts. The ATS score is a heuristic with six categories. It normalizes out the keyword category when no usable job keywords are available.
 - Future cloud architecture lives in `supabase/001_optional_cloud_resumes.sql`. It uses a private owner-scoped table and row-level security. Before enabling optional sync, add explicit sign-in and sync consent, schema validation, timestamp/version conflict checks, separate cloud export/delete controls, and two-account policy tests. Use the browser publishable key with authenticated users, never the service-role key.
 

@@ -14,7 +14,7 @@ export function download(blob:Blob, name:string) {
   link.remove();
   window.setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-export function jsonDownload(resumes:Resume[],name="ResumeForge-backup") {
+export function jsonDownload(resumes:Resume[],name="Civora-backup") {
   download(new Blob([backup(resumes)],{type:"application/json"}),name+".json");
 }
 export function useResumes(locale:Locale) {
@@ -90,7 +90,7 @@ export function useResumes(locale:Locale) {
     } catch {setNotice(t.invalidStorage);}
   }
   function raw() {
-    if(last.current) download(new Blob([last.current],{type:"application/json"}),"ResumeForge-recovery.json");
+    if(last.current) download(new Blob([last.current],{type:"application/json"}),"Civora-recovery.json");
   }
   async function importFile(file:File) {
     try {

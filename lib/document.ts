@@ -265,7 +265,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
 
 export function generatePdf(resume:Resume, bytes:FontBytes) {
   const {pdf,pages} = layoutPdf(resume,bytes);
-  pdf.setProperties({title:resume.personal.name.trim() || resume.title,creator:"ResumeForge AI"});
+  pdf.setProperties({title:resume.personal.name.trim() || resume.title,creator:"Civora"});
   for (const [index,page] of pages.entries()) {
     if (index) pdf.addPage("a4","portrait");
     for (const mark of page.marks) pdf.setFillColor(mark.color).rect(mark.x,mark.y,mark.width,mark.height,"F");

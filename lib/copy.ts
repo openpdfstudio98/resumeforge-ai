@@ -30,4 +30,4 @@ export type NavKey = keyof typeof site.en.nav;
 export const workRoutes = ["dashboard","builder","ats","resumes"] as const;
 export type WorkRoute = typeof workRoutes[number];
 export const publicRoutes = ["templates","help","about","contact","privacy","terms","career"] as const;
-export const guideKeys = ["write-a-resume","malaysia-resume-guide","ats-keywords"] as const;
+export const guideKeys = ["write-a-resume","international-resume-guide","ats-keywords"] as const;
