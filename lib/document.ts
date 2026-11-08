@@ -6,12 +6,12 @@ import { isSidebarBlock, isTitleBlock, premiumStyle, premiumText } from "./premi
 
 export const a4 = { width: 595.28, height: 841.89 };
 const ink = "#20283B";
-const singleColumn = new Set(["mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial", "heritage-classic", "signature-minimal", "academic-scholar"]);
+const singleColumn = new Set(["mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial", "heritage-classic", "signature-minimal", "academic-scholar", "modern-ink", "classic-frame", "pastel-dawn", "colour-confetti", "academic-essential"]);
 const muted = "#566477";
-const narrowSidebar = new Set(["graphite-portfolio", "onyx-gold", "obsidian-ink", "sage-column"]);
+const narrowSidebar = new Set(["graphite-portfolio", "onyx-gold", "obsidian-ink", "sage-column", "industrial-mono"]);
 const wideSidebar = new Set(["citrus-studio", "midnight-executive", "cobalt-slate"]);
 const compactHeaders = new Set(["silver-editorial", "sage-column", "graphite-portfolio"]);
-const accentBars = new Set(["bloom-studio", "violet-atelier", "canva-bloom", "rose-atelier", "citrus-studio","studio-pastel","creative-spectrum"]);
+const accentBars = new Set(["bloom-studio", "violet-atelier", "canva-bloom", "rose-atelier", "citrus-studio","studio-pastel","creative-spectrum", "creative-burst"]);
 const understated = new Set(["classic-ats", "minimal-professional", "mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial"]);
 export type TextLine = {text:string; x:number; y:number; width:number; size:number; color:string; bold:boolean};
 type Decoration = {x:number;y:number;width:number;height:number;color:string};
@@ -28,8 +28,8 @@ export function appearance(r: Resume) {
   return {
     portrait,technical,
     margin:understated.has(r.template) ? 56 : r.template === "technical-engineer" ? 46 : 50,
-    centered:["minimal-professional","modern-executive","ivory-editorial","editorial-mono"].includes(r.template),
-    rule:["classic-ats","technical-engineer","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial","heritage-classic","academic-scholar"].includes(r.template),
+    centered:["minimal-professional","modern-executive","ivory-editorial","editorial-mono","classic-frame","academic-essential"].includes(r.template),
+    rule:["classic-ats","technical-engineer","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial","heritage-classic","academic-scholar","classic-frame","academic-essential","modern-ink","pastel-dawn","colour-confetti"].includes(r.template),
     top:portrait || technical || ["modern-executive","creative-professional","aurora-minimal","paper-loom","signature-minimal"].includes(r.template),
     bar:["fresh-graduate","creative-professional","technical-engineer"].includes(r.template),
     nameSize:portrait ? 33 : technical ? 31 : r.template === "creative-professional" ? 34 : r.template === "modern-executive" ? 32 : r.template === "technical-engineer" ? 29 : 30,
@@ -89,6 +89,9 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     if (top) page.marks.push({x:0,y:0,width:a4.width,height:7,color:resume.color});
   }
   newPage();
+  if (resume.template === "pastel-dawn") page!.marks.push({x:0,y:0,width:a4.width,height:24,color:"#F1E0E8"});
+  if (resume.template === "classic-frame") page!.marks.push({x:margin,y:margin-13,width:maxWidth,height:1,color:"#B5A79B"});
+  if (resume.template === "colour-confetti") page!.dots=[{x:a4.width-26,y:20,radius:5,color:"#E5B076"},{x:a4.width-45,y:31,radius:3,color:"#83B4B1"},{x:a4.width-18,y:43,radius:3,color:"#C89BA7"}];
   if (resume.photo) {
     pages[0].photo = {x:portrait?a4.width-margin-photoSize:centered?(a4.width-photoSize)/2:margin,y:margin,data:resume.photo};
     if(!portrait)y += photoSize+10;
@@ -105,7 +108,14 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     ).map(text=>({text,width:pdf.getTextWidth(text)}));
     return {...block,...style,header,lines,lineHeight:style.size*1.38};
   });
+  const banner = resume.template === "modern-ink" ? "#243B53" : resume.template === "pastel-dawn" ? "#F4E7ED" : null;
+  let bannerDrawn = false;
   for (const [index,block] of blocks.entries()) {
+    if (banner && !block.header && !bannerDrawn) {
+      pages[0].marks.push({x:0,y:0,width:a4.width,height:y+15,color:banner});
+      y += 20;
+      bannerDrawn = true;
+    }
     const heading = block.role === "heading";
     const {header}=block;
     if(photoBesideHeader&&!header&&pages.length===1)y=Math.max(y,photoBottom);
@@ -119,7 +129,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     for (const line of block.lines) {
       if (y+block.lineHeight>bottom) newPage();
       if(band)page!.marks.push({x:margin,y,width:maxWidth,height:block.lineHeight,color:"#EAF1F7"});
-      if (line.text) page!.lines.push({...line,x:centered && header ? (a4.width-line.width)/2 : margin+(band?8:0),y:y+block.size,size:block.size,color:block.color,bold:block.bold});
+      if (line.text) page!.lines.push({...line,x:centered && header ? (a4.width-line.width)/2 : margin+(band?8:0),y:y+block.size,size:block.size,color:banner&&header?contrastOn(banner):block.color,bold:block.bold});
       y += block.lineHeight;
     }
     if(band)y+=3;
