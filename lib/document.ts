@@ -6,12 +6,12 @@ import { isSidebarBlock, isTitleBlock, premiumStyle, premiumText } from "./premi
 
 export const a4 = { width: 595.28, height: 841.89 };
 const ink = "#20283B";
-const singleColumn = new Set(["mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial"]);
+const singleColumn = new Set(["mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial", "heritage-classic", "signature-minimal", "academic-scholar"]);
 const muted = "#566477";
 const narrowSidebar = new Set(["graphite-portfolio", "onyx-gold", "obsidian-ink", "sage-column"]);
 const wideSidebar = new Set(["citrus-studio", "midnight-executive", "cobalt-slate"]);
 const compactHeaders = new Set(["silver-editorial", "sage-column", "graphite-portfolio"]);
-const accentBars = new Set(["bloom-studio", "violet-atelier", "canva-bloom", "rose-atelier", "citrus-studio"]);
+const accentBars = new Set(["bloom-studio", "violet-atelier", "canva-bloom", "rose-atelier", "citrus-studio","studio-pastel","creative-spectrum"]);
 const understated = new Set(["classic-ats", "minimal-professional", "mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial"]);
 export type TextLine = {text:string; x:number; y:number; width:number; size:number; color:string; bold:boolean};
 type Decoration = {x:number;y:number;width:number;height:number;color:string};
@@ -19,6 +19,9 @@ export const photoSize = 65;
 export type Page = {lines:TextLine[]; marks:Decoration[]; dots?:{x:number;y:number;radius:number;color:string}[]; photo?: {x:number;y:number;data:string;round?:boolean}};
 
 export const family = {sans:"Arial",serif:"Times New Roman",mono:"Courier New"};
+export function isSingleColumn(template:Resume["template"]) {
+  return singleColumn.has(template) || !premiumStyle(template);
+}
 export function appearance(r: Resume) {
   const portrait=r.template==="modern-portrait";
   const technical=r.template==="engineering-blue";
@@ -26,8 +29,8 @@ export function appearance(r: Resume) {
     portrait,technical,
     margin:understated.has(r.template) ? 56 : r.template === "technical-engineer" ? 46 : 50,
     centered:["minimal-professional","modern-executive","ivory-editorial","editorial-mono"].includes(r.template),
-    rule:["classic-ats","technical-engineer","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial"].includes(r.template),
-    top:portrait || technical || ["modern-executive","creative-professional","aurora-minimal","paper-loom"].includes(r.template),
+    rule:["classic-ats","technical-engineer","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial","heritage-classic","academic-scholar"].includes(r.template),
+    top:portrait || technical || ["modern-executive","creative-professional","aurora-minimal","paper-loom","signature-minimal"].includes(r.template),
     bar:["fresh-graduate","creative-professional","technical-engineer"].includes(r.template),
     nameSize:portrait ? 33 : technical ? 31 : r.template === "creative-professional" ? 34 : r.template === "modern-executive" ? 32 : r.template === "technical-engineer" ? 29 : 30,
   };
@@ -72,7 +75,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     pdf.addFileToVFS(`${style}.ttf`,bytes[index]);
     pdf.addFont(`${style}.ttf`,"ResumeFont",style);
   }
-  if(premiumStyle(resume.template) && !singleColumn.has(resume.template))return {pdf,pages:layoutPremium(resume,pdf)};
+  if(!isSingleColumn(resume.template))return {pdf,pages:layoutPremium(resume,pdf)};
   const {margin,centered,rule,top,bar,portrait,technical} = appearance(resume);
   const bottom = a4.height-margin;
   const maxWidth = a4.width-2*margin;
