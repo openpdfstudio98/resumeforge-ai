@@ -8,7 +8,7 @@ export type SectionKey = typeof sectionKeys[number];
 export const entryFields = ["title", "organization", "dates", "description"] as const;
 export const personalFields = ["name", "headline", "email", "phone", "location", "website"] as const;
 export type Entry = Record<typeof entryFields[number], string> & { id: string };
-export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold", "aurora-minimal", "executive-ledger", "editorial-mono", "canva-bloom", "neon-grid", "paper-loom", "obsidian-ink", "sage-column", "cobalt-slate", "rose-atelier"] as const;
+export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline", "bloom-studio", "violet-atelier", "ivory-editorial", "onyx-gold", "aurora-minimal", "executive-ledger", "editorial-mono", "canva-bloom", "neon-grid", "paper-loom", "obsidian-ink", "sage-column", "cobalt-slate", "rose-atelier", "heritage-classic", "signature-minimal", "academic-scholar", "professional-stripe", "modern-coral", "studio-pastel", "executive-timeline", "creative-spectrum"] as const;
 export type Template = typeof templateKeys[number];
 export const fonts = ["sans", "serif", "mono"] as const;
 export type Font = typeof fonts[number];
@@ -59,6 +59,14 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "sage-column":{name:"Sage Column",color:"#4F6F52",font:"sans",description:{en:"Calm sage sidebar column.",ms:"Lajur sidebar sage yang tenang."}},
   "cobalt-slate":{name:"Cobalt Slate",color:"#1E40AF",font:"sans",description:{en:"Cobalt and slate executive hybrid.",ms:"Hibrid eksekutif kobalt dan slate."}},
   "rose-atelier":{name:"Rose Atelier",color:"#9F1239",font:"sans",description:{en:"Rose-toned atelier creative template.",ms:"Templat kreatif tona ros atelier."}},
+  "heritage-classic":{name:"Heritage Classic",color:"#334155",font:"serif",description:{en:"A balanced, traditional single-column resume.",ms:"Resume klasik satu lajur yang seimbang."}},
+  "signature-minimal":{name:"Signature Minimal",color:"#334B56",font:"sans",description:{en:"A clean modern resume with a subtle accent rule.",ms:"Resume moden minimal dengan aksen halus."}},
+  "academic-scholar":{name:"Academic Scholar",color:"#3A4760",font:"serif",description:{en:"A clear single-column layout with room for academic experience.",ms:"Susun atur satu lajur untuk pengalaman akademik."}},
+  "professional-stripe":{name:"Professional Stripe",color:"#294C6B",font:"sans",description:{en:"A structured professional resume with a bold header.",ms:"Resume profesional dengan pengepala yang menonjol."}},
+  "modern-coral":{name:"Modern Coral",color:"#A0443A",font:"sans",description:{en:"A contemporary two-column layout with warm coral accents.",ms:"Susun atur dua lajur moden dengan aksen koral."}},
+  "studio-pastel":{name:"Studio Pastel",color:"#725F8F",font:"sans",description:{en:"A soft pastel creative resume with a light sidebar.",ms:"Resume kreatif berwarna pastel dengan lajur sisi cerah."}},
+  "executive-timeline":{name:"Executive Timeline",color:"#263B52",font:"serif",description:{en:"A polished executive design with a structured timeline.",ms:"Reka bentuk eksekutif dengan garis masa yang tersusun."}},
+  "creative-spectrum":{name:"Creative Spectrum",color:"#226D75",font:"sans",description:{en:"A creative layout with a confident colour header.",ms:"Susun atur kreatif dengan pengepala warna yang menyerlah."}},
 };
 export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
