@@ -113,7 +113,7 @@ test("draft duplicate, backup, invalid import, restore, deletion and clear",asyn
   await page.goto("/en/resumes");
   const input=page.locator('input[type=file]');
   await input.setInputFiles({name:"bad.json",mimeType:"application/json",buffer:Buffer.from("{}")});
-  await expect(page.getByRole("status").filter({hasText:"valid Civora"})).toBeVisible();
+  await expect(page.getByRole("status").filter({hasText:"valid Civora Resume"})).toBeVisible();
   const resume=sampleResume("en","classic-ats");
   await input.setInputFiles({name:"good.json",mimeType:"application/json",buffer:Buffer.from(backup([resume]))});
   await expect(page.locator(".draft")).toHaveCount(1);
@@ -124,7 +124,7 @@ test("draft duplicate, backup, invalid import, restore, deletion and clear",asyn
   await expect(page.locator(".draft")).toHaveCount(1);
   const waiting=page.waitForEvent("download");
   await page.getByRole("button",{name:"Back up all resumes"}).click();
-  expect((await waiting).suggestedFilename()).toBe("Civora-backup.json");
+  expect((await waiting).suggestedFilename()).toBe("Civora-Resume-backup.json");
   await page.getByRole("button",{name:/^Delete ·/}).click();
   await page.getByRole("button",{name:"Confirm",exact:true}).click();
   await expect(page.locator(".draft")).toHaveCount(0);

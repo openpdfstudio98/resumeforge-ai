@@ -9,7 +9,7 @@ const navIcons = {dashboard:LayoutDashboard,builder:FileText,templates:LayoutTem
 const workspace = ["dashboard","builder","templates","ats","resumes","help"] as const;
 
 export function Brand({locale}:{locale:Locale}) {
-  return <a className="brand" href={`/${locale}`}><span className="brand-mark" aria-hidden="true"/><strong translate="no">Civora</strong></a>;
+  return <a className="brand" href={`/${locale}`}><span className="brand-mark" aria-hidden="true"/><strong translate="no">Civora Resume</strong></a>;
 }
 export function Shell({locale,path,sidebar,children}:{locale:Locale;path:string;sidebar:boolean;children:ReactNode}) {
   const t=site[locale];

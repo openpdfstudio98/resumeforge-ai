@@ -7,8 +7,8 @@ import { UiLanguage } from "../../components/ui-language";
 import "../globals.css";
 
 export const metadata:Metadata = {
-  applicationName:"Civora",
-  title:{default:"Civora",template:"%s | Civora"},
+  applicationName:"Civora Resume",
+  title:{default:"Civora Resume",template:"%s | Civora Resume"},
   metadataBase:siteOrigin() ? new URL(siteOrigin()!) : undefined,
   verification:{google:process.env.RESUMEFORGE_GOOGLE_VERIFICATION},
   icons:{icon:"/icon.svg"},
