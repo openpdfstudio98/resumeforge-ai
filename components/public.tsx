@@ -90,7 +90,7 @@ export function Home({locale}:{locale:Locale}) {
       <div className="step-grid">{extra.steps.map((label,index)=><div key={label} className="step-card"><span className="step-number">0{index+1}</span><div><h3><Ui>{label}</Ui></h3><p><Ui>{extra.stepDetails[index]}</Ui></p></div></div>)}</div>
     </section>
     <section className="public-section"><div className="split"><h2><Ui>{t.gallery}</Ui></h2><a className="text-link" href={`${root}/templates`}><Ui>{t.browse}</Ui><ArrowRight size={16}/></a></div>
-      <div className="template-grid">{(["midnight-executive","citrus-studio","teal-timeline"] as const).map(template=><TemplateCard key={template} template={template} locale={locale}/>)}</div>
+      <div className="template-grid">{(["bloom-studio","violet-atelier","onyx-gold"] as const).map(template=><TemplateCard key={template} template={template} locale={locale}/>)}</div>
     </section>
   </>;
 }

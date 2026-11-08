@@ -76,9 +76,11 @@ function premiumChildren(resume:Resume,blocks:Block[],design:NonNullable<ReturnT
   const none={style:BorderStyle.NIL};
   const rule=(color:string)=>({style:BorderStyle.SINGLE,color,size:4,space:2});
   const filled=design.masthead==="filled";
+  const trim=design.trim?.slice(1)??accent;
+  const mastheadFill=design.mastheadFill?.slice(1)??accent;
   function paragraph(block:Block,inSidebar:boolean,inMasthead=false) {
     const style=textStyle(resume,block.role);
-    const color=inSidebar?design.sideInk.slice(1):inMasthead&&filled?"FFFFFF":style.color.slice(1);
+    const color=inSidebar?design.sideInk.slice(1):inMasthead&&filled&&!design.mastheadFill?"FFFFFF":style.color.slice(1);
     const size=inSidebar?Math.min(style.size,10):style.size;
     const timeline=design.timeline&&!inSidebar&&block.section==="experience"&&block.role!=="heading";
     return new Paragraph({
@@ -86,7 +88,7 @@ function premiumChildren(resume:Resume,blocks:Block[],design:NonNullable<ReturnT
       heading:block.role==="heading"?HeadingLevel.HEADING_1:undefined,
       keepNext:block.keep,keepLines:block.role!=="body",widowControl:true,
       spacing:{before:block.gap*20,after:0,line:260},
-      border:block.role==="heading"?{bottom:rule(inSidebar?color:"BCC7D2")}:timeline?{left:{...rule(accent),space:7}}:undefined,
+      border:block.role==="heading"?{bottom:rule(design.trim?.slice(1)??(inSidebar?color:"BCC7D2"))}:timeline?{left:{...rule(trim),space:7}}:undefined,
       children:premiumText(block).split(/\r?\n/).map((text,index)=>new TextRun({
         text,break:index?1:undefined,bold:style.bold,color,size:size*2,font:family[resume.font],
       })),
@@ -111,18 +113,21 @@ function premiumChildren(resume:Resume,blocks:Block[],design:NonNullable<ReturnT
   const body=blocks.filter(block=>!isSidebarBlock(block)&&!isTitleBlock(block)).map(block=>paragraph(block,false));
   const photo=resume.photo?portrait(resume.photo,AlignmentType.CENTER,false):undefined;
   if(photo&&!filled)side.unshift(photo);
-  const columns=row([
+  const lanes=[
     {width:sidebarWidth,fill:design.sidebar.slice(1),children:side},
     {width:width-sidebarWidth,fill:"FFFFFF",children:design.masthead==="none"?[...titles,...body]:body},
-  ],design.masthead==="rule");
+  ];
+  const columns=row(design.rightSidebar?[...lanes].reverse():lanes,design.masthead==="rule");
   if(filled) {
     const masthead=photo?[
-      {width:sidebarWidth,fill:accent,children:[photo]},
-      {width:width-sidebarWidth,fill:accent,children:titles},
-    ]:[{width,fill:accent,children:titles}];
+      {width:sidebarWidth,fill:mastheadFill,children:[photo]},
+      {width:width-sidebarWidth,fill:mastheadFill,children:titles},
+    ]:[{width,fill:mastheadFill,children:titles}];
+    if(photo&&design.rightSidebar)masthead.reverse();
     return [row(masthead),new Paragraph({spacing:{line:40}}),columns];
   }
-  return design.masthead==="rule"?[...titles,columns]:[columns];
+  if(design.masthead!=="rule")return [columns];
+  return design.mastheadFill?[row([{width,fill:mastheadFill,children:titles}]),columns]:[...titles,columns];
 }
 
 export function generateWord(resume:Resume) {
