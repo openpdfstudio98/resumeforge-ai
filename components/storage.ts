@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BACKUP_LIMIT, backup, copyResume, readBackup, RECOVERY_KEY, STORAGE_KEY, type Locale, type Resume } from "../lib/resume";
 import { work } from "../lib/work-copy";
+import { useCopy } from "./ui-language";
 
 export function download(blob:Blob, name:string) {
   const url=URL.createObjectURL(blob);
@@ -17,7 +18,7 @@ export function jsonDownload(resumes:Resume[],name="ResumeForge-backup") {
   download(new Blob([backup(resumes)],{type:"application/json"}),name+".json");
 }
 export function useResumes(locale:Locale) {
-  const t=work[locale];
+  const t=useCopy(work[locale]);
   const [ready,setReady]=useState(false);
   const [resumes,setResumes]=useState<Resume[]>([]);
   const [warning,setWarning]=useState<"invalid"|"stale"|"unavailable">();

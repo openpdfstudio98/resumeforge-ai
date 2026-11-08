@@ -1,7 +1,7 @@
 import { documentBlocks } from "./blocks";
 import { type Locale, type Resume } from "./resume";
 
-const copy = {
+export const atsCopy = {
   en: {
     categories:["Contact","Section headings","Experience","Education & skills","Readability","Job keywords"],
     tips:["Include a valid email and a phone number with at least seven digits.","Use familiar headings such as Summary, Experience, Education and Skills.","Add role titles, date ranges and descriptions of your work or relevant projects.","List your education and specific skills that relate to the role.","Use short lines and avoid decorative symbols in important text.","Use the suggested terms only where they accurately describe your skills or experience."],
@@ -33,7 +33,7 @@ export function assess(source: Resume | string, job: string, locale: Locale) {
   const draft = typeof source !== "string" ? source : undefined;
   const text = typeof source === "string" ? source : documentBlocks(source).map(block=>block.text).join("\n");
   const clean = text.split(/\r?\n/).map(line=>line.trim().replace(/:$/,"")).join("\n");
-  const {categories,tips} = copy[locale];
+  const {categories,tips} = atsCopy[locale];
   const experience = section(text,headings[1]);
   const education = section(text,headings[2]);
   const skills = section(text,headings[3]);

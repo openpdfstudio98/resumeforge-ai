@@ -62,7 +62,8 @@ test("editor covers all fields, reorder, live preview, autosave and interface la
   await page.getByRole("combobox",{name:"Document headings",exact:true}).selectOption("ms");
   await expect(page.locator(".paper-stack")).toContainText("Pengalaman Kerja");
   await expect(page.locator(".paper-stack")).toContainText("QA Section heading");
-  await page.getByRole("link",{name:/Bahasa Melayu/}).click();
+  await page.getByRole("button",{name:"Language",exact:true}).click();
+  await page.getByRole("link",{name:"Bahasa Melayu",exact:true}).click();
   await expect(page).toHaveURL(/\/ms\/builder\?id=/);
   await expect(page.getByLabel("Nama penuh",{exact:true})).toHaveValue("Nur QA");
   await page.reload();
@@ -170,4 +171,69 @@ test("keyboard and axe checks on landing, editor and ATS states",async({page})=>
   await page.getByRole("button",{name:"Semak resume",exact:true}).click();
   await expect(page.getByRole("alert").filter({hasText:"Masukkan teks resume"})).toBeVisible();
   expect(await violations()).toEqual([]);
+});
+
+test("optional resume photo stays local and appears in both downloads",async({page},info)=>{
+  await page.goto("/en/builder");
+  await page.getByRole("button",{name:"New resume"}).click();
+  await page.getByLabel("Full name",{exact:true}).fill("Photo QA");
+  const photo=page.locator('input[type=file][accept*="image/jpeg"]');
+  await photo.setInputFiles({name:"invalid.png",mimeType:"image/png",buffer:Buffer.from("not an image")});
+  await expect(page.getByText(/Couldn’t open that photo/)).toBeVisible();
+  const png=await page.evaluate(()=>{
+    const canvas=document.createElement("canvas");
+    canvas.width=160;
+    canvas.height=120;
+    const context=canvas.getContext("2d")!;
+    context.fillStyle="#7343ce";
+    context.fillRect(0,0,160,120);
+    return canvas.toDataURL().split(",")[1];
+  });
+  await photo.setInputFiles({name:"photo.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
+  await expect(page.locator(".document-sheet image")).toHaveCount(1);
+  await page.reload();
+  await expect(page.locator(".document-sheet image")).toHaveCount(1);
+  for (const format of ["PDF","DOCX"]) {
+    const wait=page.waitForEvent("download");
+    await page.getByRole("button",{name:`Download ${format}`}).click();
+    const file=info.outputPath(`photo.${format.toLowerCase()}`);
+    await (await wait).saveAs(file);
+    if(format==="PDF") {
+      expect(execFileSync("pdfimages",["-list",file],{encoding:"utf8"})).toMatch(/image\s+120\s+120/);
+      expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Photo QA");
+    } else {
+      expect(execFileSync("unzip",["-Z1",file],{encoding:"utf8"})).toMatch(/word\/media\/.*\.jpg/);
+    }
+  }
+  await page.getByRole("button",{name:"Remove photo"}).click();
+  await page.reload();
+  await expect(page.getByRole("button",{name:"Add photo"})).toBeVisible();
+  await expect(page.locator(".document-sheet image")).toHaveCount(0);
+});
+
+test("language picker translates UI with the device API and keeps the resume unchanged",async({page})=>{
+  await page.addInitScript(()=>{
+    Object.defineProperty(window,"Translator",{configurable:true,value:{
+      async create({targetLanguage}:{targetLanguage:string}) {
+        return {async translate(text:string){return `${targetLanguage} · ${text}`;},destroy(){}};
+      },
+    }});
+  });
+  await page.goto("/en/builder");
+  await page.getByRole("button",{name:"New resume"}).click();
+  await page.getByLabel("Full name",{exact:true}).fill("Private Name");
+  await page.getByRole("button",{name:"Language",exact:true}).click();
+  await page.getByLabel("Search languages").fill("Español");
+  await page.getByRole("combobox",{name:"Choose a language"}).selectOption("es");
+  await page.getByRole("button",{name:"Translate interface"}).click();
+  await expect(page.locator("html")).toHaveAttribute("lang","es");
+  await expect(page.getByRole("button",{name:"es · Download PDF"})).toBeVisible();
+  await expect(page.getByLabel("es · Full name",{exact:true})).toHaveValue("Private Name");
+  await expect(page.locator(".document-sheet")).toContainText("Private Name");
+  await page.reload();
+  await expect(page.getByRole("button",{name:"es · Download PDF"})).toBeVisible();
+  await page.getByRole("button",{name:"Language",exact:true}).click();
+  await page.getByRole("link",{name:"English",exact:true}).click();
+  await expect(page.locator("html")).toHaveAttribute("lang","en");
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Private Name");
 });

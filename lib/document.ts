@@ -7,7 +7,8 @@ const ink = "#20283B";
 const muted = "#4D586C";
 export type TextLine = {text:string; x:number; y:number; width:number; size:number; color:string; bold:boolean};
 type Decoration = {x:number;y:number;width:number;height:number;color:string};
-export type Page = {lines:TextLine[]; marks:Decoration[]};
+export const photoSize = 65;
+export type Page = {lines:TextLine[]; marks:Decoration[]; photo?: {x:number;y:number;data:string}};
 
 export const family = {sans:"Arial",serif:"Times New Roman",mono:"Courier New"};
 export function appearance(r: Resume) {
@@ -69,6 +70,10 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     if (top) page.marks.push({x:0,y:0,width:a4.width,height:6,color:resume.color});
   }
   newPage();
+  if (resume.photo) {
+    pages[0].photo = {x:centered?(a4.width-photoSize)/2:margin,y:margin,data:resume.photo};
+    y += photoSize+10;
+  }
   const blocks = documentBlocks(resume).map(block=>{
     const style = textStyle(resume,block.role);
     pdf.setFont("ResumeFont",style.bold ? "bold" : "normal").setFontSize(style.size);
@@ -105,6 +110,7 @@ export function generatePdf(resume:Resume, bytes:FontBytes) {
   for (const [index,page] of pages.entries()) {
     if (index) pdf.addPage("a4","portrait");
     for (const mark of page.marks) pdf.setFillColor(mark.color).rect(mark.x,mark.y,mark.width,mark.height,"F");
+    if (page.photo) pdf.addImage(page.photo.data,"JPEG",page.photo.x,page.photo.y,photoSize,photoSize);
     for (const line of page.lines) {
       pdf.setTextColor(line.color).setFont("ResumeFont",line.bold ? "bold" : "normal").setFontSize(line.size);
       pdf.text(line.text,line.x,line.y);

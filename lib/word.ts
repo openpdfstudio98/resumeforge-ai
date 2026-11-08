@@ -1,5 +1,5 @@
-import { AlignmentType, BorderStyle, Document, HeadingLevel, Packer, Paragraph, TextRun } from "docx";
-import { a4, appearance, family, textStyle } from "./document";
+import { AlignmentType, BorderStyle, Document, HeadingLevel, ImageRun, Packer, Paragraph, TextRun } from "docx";
+import { a4, appearance, family, photoSize, textStyle } from "./document";
 import { documentBlocks } from "./blocks";
 import type { Resume } from "./resume";
 
@@ -26,6 +26,18 @@ export function wordDocument(resume: Resume) {
       })),
     });
   });
+  if (resume.photo) {
+    const pixels = Math.round(photoSize * 96 / 72);
+    children.unshift(new Paragraph({
+      alignment:design.centered ? AlignmentType.CENTER : AlignmentType.LEFT,
+      keepNext:true,
+      spacing:{after:200},
+      children:[new ImageRun({
+        type:"jpg",data:Uint8Array.from(atob(resume.photo.split(",")[1]),character=>character.charCodeAt(0)),
+        transformation:{width:pixels,height:pixels},
+      })],
+    }));
+  }
   const margin = design.margin*20;
   return new Document({
     title:resume.personal.name.trim() || resume.title,

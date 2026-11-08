@@ -32,3 +32,8 @@ export const work = {
     atsTitle:"Semakan ATS Resume", atsIntro:"Semak bahagian penting resume dan bandingkan istilah dengan huraian kerja.", heuristic:"Skor heuristik ResumeForge memberi maklum balas penulisan. Skor ini tidak menjamin keserasian dengan mana-mana ATS atau meramal keputusan pengambilan pekerja.", resumeSource:"Sumber resume", paste:"Tampal teks resume", job:"Huraian kerja (pilihan)", jobHint:"Tampal huraian kerja untuk menyemak liputan kata kunci.", check:"Semak resume", result:"Skor resume", recommendations:"Cadangan penambahbaikan", missingKeywords:"Kata kunci berpotensi", matched:"Kata kunci sepadan", noKeywords:"Tambah huraian kerja dengan istilah khusus jawatan untuk menilai kata kunci.", noneMissing:"Semua kata kunci yang dianalisis terdapat dalam resume.", noIssues:"Semua kategori yang dinilai mendapat markah penuh.", noText:"Masukkan teks resume atau pilih draf yang mempunyai kandungan.", excluded:"Tidak dinilai", resultStale:"Input telah berubah. Jalankan semakan semula untuk mengemas kini keputusan.",
   },
 };
+
+export const photoCopy = {
+  en:{title:"Resume photo",hint:"Optional. Add a JPG, PNG, or WebP up to 10 MB. The image is cropped to a square and stays on this device.",add:"Add photo",replace:"Replace photo",remove:"Remove photo",loading:"Preparing photo…",error:"Couldn’t open that photo. Choose a JPG, PNG, or WebP up to 10 MB."},
+  ms:{title:"Foto resume",hint:"Pilihan. Tambah JPG, PNG atau WebP sehingga 10 MB. Imej dipotong segi empat sama dan kekal pada peranti ini.",add:"Tambah foto",replace:"Ganti foto",remove:"Buang foto",loading:"Menyediakan foto…",error:"Foto tidak dapat dibuka. Pilih JPG, PNG atau WebP sehingga 10 MB."},
+};
