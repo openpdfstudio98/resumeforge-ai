@@ -1,9 +1,11 @@
 "use client";
 import { Copy, FileText, FolderOpen, LayoutTemplate, Plus, ScanLine, ShieldCheck, Trash2, Upload } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { site, type WorkRoute } from "../lib/copy";
-import { copyResume, makeResume, touchResume, templateKeys, templates, type Locale, type Resume, type Template } from "../lib/resume";
+import { copyResume, demoPortraitPath, makeResume, sampleResume, touchResume, templateKeys, templates, type Locale, type Resume, type Template } from "../lib/resume";
+import { preparePhoto } from "../lib/photo";
+import { extraCopy } from "../lib/ui-language";
 import { work } from "../lib/work-copy";
 import { useCopy, useUi } from "./ui-language";
 const Checker = dynamic(()=>import("./checker").then(m=>m.Checker));
@@ -16,7 +18,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
   const ui=useUi();
   const storage=useResumes(locale);
   const {resumes,ready,save,warning,notice}=storage;
-  const [query,setQuery]=useState<{id:string;template:Template}>({id:"",template:"classic-ats"});
+  const [query,setQuery]=useState<{id:string;template:Template;sample:boolean}>({id:"",template:"classic-ats",sample:false});
   const [confirmation,setConfirmation]=useState<{message:string;action:()=>void}>();
   const dialog=useRef<HTMLDialogElement>(null);
   const file=useRef<HTMLInputElement>(null);
@@ -24,7 +26,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
     function sync() {
       const search=new URLSearchParams(location.search);
       const template=templateKeys.find(key=>key===search.get("template")) ?? "classic-ats";
-      setQuery({id:search.get("id")??"",template});
+      setQuery({id:search.get("id")??"",template,sample:search.get("sample")==="1"});
     }
     const frame=requestAnimationFrame(sync);
     addEventListener("popstate",sync);
@@ -39,13 +41,31 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
   const sorted=[...resumes].sort((a,b)=>b.updated-a.updated);
   const selected=resumes.find(r=>r.id===query.id);
   const message=warning==="invalid"?t.invalidStorage:warning==="stale"?t.stale:warning==="unavailable"?t.saveError:"";
-  function create() {
-    const draft=makeResume(locale,query.template);
-    if(save([draft,...resumes])) {
-      history.replaceState(null,"",`${builder}?id=${draft.id}`);
-      window.dispatchEvent(new PopStateEvent("popstate"));
-      setQuery({id:draft.id,template:draft.template});
+  function openDraft(draft:Resume) {
+    const saved=save([draft,...resumes]);
+    history.replaceState(null,"",saved?`${builder}?id=${draft.id}`:`${builder}?template=${draft.template}`);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }
+  const openSample=useEffectEvent(openDraft);
+  useEffect(()=>{
+    if(!ready||route!=="builder"||!query.sample||query.id)return;
+    const controller=new AbortController();
+    async function loadSample() {
+      const draft=sampleResume(locale,query.template);
+      draft.title=extraCopy[locale].sample;
+      if(query.template==="modern-portrait") {
+        try {
+          const response=await fetch(demoPortraitPath,{signal:controller.signal});
+          if(response.ok)draft.photo=await preparePhoto(new File([await response.blob()],"portrait.webp",{type:"image/webp"}));
+        } catch { /* Keep the editable sample available even if the image fails to load. */ }
+      }
+      if(!controller.signal.aborted)openSample(draft);
     }
+    const frame=requestAnimationFrame(()=>void loadSample());
+    return ()=>{cancelAnimationFrame(frame);controller.abort();};
+  },[locale,query.id,query.sample,query.template,ready,route]);
+  function create() {
+    openDraft(makeResume(locale,query.template));
   }
   function duplicate(r:Resume) {
     save([copyResume(r,`${r.title} · ${t.copied}`),...resumes]);
@@ -62,7 +82,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
       </div>
     </article>)}</div>:<div className="empty"><FolderOpen size={28}/><h3>{t.empty}</h3><p>{t.emptyHint}</p><a className="btn primary" href={builder}>{t.create}</a></div>;
   }
-  if(!ready)return <div className="panel" role="status">{t.loading}</div>;
+  if(!ready||(route==="builder"&&query.sample&&!query.id))return <div className="panel" role="status">{t.loading}</div>;
   return <>
     {message && <div className="alert" role="alert">{message}{warning==="invalid" && <div className="actions"><button className="btn" onClick={storage.raw}>{t.raw}</button><a className="btn" href={`${root}/resumes`}>{t.back}</a></div>}</div>}
     {notice && <p className="alert" role="status">{notice}</p>}
@@ -83,7 +103,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
     {route==="dashboard" && <>
       <header className="workspace-heading"><div><div className="eyebrow">{t.overview}</div><h1>{s.nav.dashboard}</h1></div></header>
       <section className="dashboard-hero"><div className="eyebrow">RESUMEFORGE AI</div><h2>{t.dashboardTitle}</h2><p>{t.dashboardIntro}</p><a className="btn primary" href={builder}><Plus size={18}/>{t.create}</a></section>
-      <div className="stats"><div className="panel"><FileText size={20}/><strong>{resumes.length}</strong><span>{t.drafts}</span></div><div className="panel"><LayoutTemplate size={20}/><strong>6</strong><span>{t.templates}</span></div><div className="panel"><ShieldCheck size={20}/><strong>100%</strong><span>{t.privacy}</span></div></div>
+      <div className="stats"><div className="panel"><FileText size={20}/><strong>{resumes.length}</strong><span>{t.drafts}</span></div><div className="panel"><LayoutTemplate size={20}/><strong>{templateKeys.length}</strong><span>{t.templates}</span></div><div className="panel"><ShieldCheck size={20}/><strong>100%</strong><span>{t.privacy}</span></div></div>
       <section className="panel stack"><div className="split"><h2>{t.recent}</h2><a className="text-link" href={`${root}/resumes`}>{t.viewAll}</a></div>{cards(sorted.slice(0,3))}</section>
       <h2 className="section-title">{t.tools}</h2><div className="actions"><a className="btn" href={`${root}/templates`}><LayoutTemplate size={18}/>{s.nav.templates}</a><a className="btn" href={`${root}/ats`}><ScanLine size={18}/>{s.nav.ats}</a></div>
     </>}

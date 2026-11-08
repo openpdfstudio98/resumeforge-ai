@@ -7,7 +7,7 @@ export type SectionKey = typeof sectionKeys[number];
 export const entryFields = ["title", "organization", "dates", "description"] as const;
 export const personalFields = ["name", "headline", "email", "phone", "location", "website"] as const;
 export type Entry = Record<typeof entryFields[number], string> & { id: string };
-export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional"] as const;
+export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue"] as const;
 export type Template = typeof templateKeys[number];
 export const fonts = ["sans", "serif", "mono"] as const;
 export type Font = typeof fonts[number];
@@ -36,7 +36,10 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "minimal-professional": {name:"Minimal Professional",color:"#3D4150",font:"serif",description:{en:"A restrained serif design with generous spacing.",ms:"Reka bentuk serif ringkas dengan ruang yang selesa."}},
   "technical-engineer": {name:"Technical Engineer",color:"#195C85",font:"mono",description:{en:"A precise layout that surfaces technical skills and projects early.",ms:"Susun atur kemas yang mengetengahkan kemahiran teknikal dan projek."}},
   "creative-professional": {name:"Creative Professional",color:"#7738A3",font:"sans",description:{en:"An expressive accent treatment with a clear reading order.",ms:"Aksen warna yang menyerlah dengan turutan bacaan yang jelas."}},
+  "modern-portrait": {name:"Modern Portrait",color:"#4338AA",font:"sans",description:{en:"A bold name and optional portrait at the top right, with a clean single-column body.",ms:"Nama yang menonjol dan foto pilihan di kanan atas, dengan isi resume satu lajur."}},
+  "engineering-blue": {name:"Engineering Blue",color:"#23496C",font:"sans",description:{en:"Navy accents put technical skills, certifications and projects before work history.",ms:"Aksen biru navy menonjolkan kemahiran teknikal, pensijilan dan projek sebelum sejarah kerja."}},
 };
+export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
 export const RECOVERY_KEY = "resumeforge:v1:previous";
 export const BACKUP_LIMIT = 4_000_000;
@@ -46,6 +49,8 @@ export function blankEntry(): Entry {
 export function makeResume(locale: Locale, template: Template = "classic-ats"): Resume {
   const order: SectionKey[] = template === "fresh-graduate"
     ? ["summary","education","skills","experience","projects","certifications","languages","custom"]
+    : template === "engineering-blue"
+      ? ["summary","skills","certifications","projects","experience","education","languages","custom"]
     : template === "technical-engineer"
       ? ["summary","skills","projects","experience","education","certifications","languages","custom"]
       : [...sectionKeys];
@@ -68,6 +73,15 @@ export function sampleResume(locale: Locale, template: Template): Resume {
   r.sections.education = [{...blankEntry(),title:en?"Diploma in Business Administration":"Diploma Pentadbiran Perniagaan",organization:"Meridian College",dates:"2020 – 2023"}];
   r.sections.skills = [{...blankEntry(),description:en?"Excel, Inventory tracking, Process documentation":"Excel, Penjejakan inventori, Dokumentasi proses"}];
   r.sections.projects = [{...blankEntry(),title:en?"Stock reconciliation dashboard":"Papan pemuka penyelarasan stok",description:en?"Built a shared workbook for weekly stock reviews.":"Membina buku kerja bersama untuk semakan stok mingguan."}];
+  if(template==="engineering-blue") {
+    r.personal={...r.personal,name:"Daniel Lim",headline:en?"Quality Engineer":"Jurutera Kualiti",email:"daniel@example.com"};
+    r.sections.summary=[{...blankEntry(),description:en?"Quality engineer with experience in valve inspection, hydrostatic testing and corrective actions.":"Jurutera kualiti berpengalaman dalam pemeriksaan injap, ujian hidrostatik dan tindakan pembetulan."}];
+    r.sections.skills=[{...blankEntry(),description:"AutoCAD, Microsoft Excel, 8D, GD&T"}];
+    r.sections.certifications=[{...blankEntry(),title:en?"ISO 9001 Internal Auditor Training":"Latihan Juruaudit Dalaman ISO 9001",dates:"2025"}];
+    r.sections.projects=[{...blankEntry(),title:en?"Valve inspection reporting":"Pelaporan pemeriksaan injap",description:en?"Built a checklist to standardize pressure test records and inspection handovers.":"Membina senarai semak untuk menyeragamkan rekod ujian tekanan dan serahan pemeriksaan."}];
+    r.sections.experience=[{...r.sections.experience[0],title:r.personal.headline,description:en?"Reviewed dimensional and pressure test reports for industrial valves.":"Menyemak laporan ukuran dan ujian tekanan bagi injap industri."}];
+    r.sections.education=[{...r.sections.education[0],title:en?"Diploma in Mechanical Engineering":"Diploma Kejuruteraan Mekanikal"}];
+  }
   return r;
 }
 function object(value: unknown): Record<string, unknown> {

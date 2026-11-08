@@ -12,13 +12,16 @@ export type Page = {lines:TextLine[]; marks:Decoration[]; photo?: {x:number;y:nu
 
 export const family = {sans:"Arial",serif:"Times New Roman",mono:"Courier New"};
 export function appearance(r: Resume) {
+  const portrait=r.template==="modern-portrait";
+  const technical=r.template==="engineering-blue";
   return {
+    portrait,technical,
     margin:r.template === "minimal-professional" ? 62 : r.template === "technical-engineer" ? 45 : 52,
     centered:r.template === "minimal-professional" || r.template === "modern-executive",
     rule:r.template === "classic-ats" || r.template === "technical-engineer",
-    top:r.template === "modern-executive" || r.template === "creative-professional",
+    top:portrait || technical || r.template === "modern-executive" || r.template === "creative-professional",
     bar:r.template === "fresh-graduate" || r.template === "creative-professional",
-    nameSize:r.template === "creative-professional" ? 32 : r.template === "modern-executive" ? 30 : r.template === "technical-engineer" ? 24 : 27,
+    nameSize:portrait ? 33 : technical ? 28 : r.template === "creative-professional" ? 32 : r.template === "modern-executive" ? 30 : r.template === "technical-engineer" ? 24 : 27,
   };
 }
 function readable(color:string) {
@@ -57,7 +60,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     pdf.addFileToVFS(`${style}.ttf`,bytes[index]);
     pdf.addFont(`${style}.ttf`,"ResumeFont",style);
   }
-  const {margin,centered,rule,top,bar} = appearance(resume);
+  const {margin,centered,rule,top,bar,portrait,technical} = appearance(resume);
   const bottom = a4.height-margin;
   const maxWidth = a4.width-2*margin;
   const pages:Page[] = [];
@@ -71,31 +74,39 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
   }
   newPage();
   if (resume.photo) {
-    pages[0].photo = {x:centered?(a4.width-photoSize)/2:margin,y:margin,data:resume.photo};
-    y += photoSize+10;
+    pages[0].photo = {x:portrait?a4.width-margin-photoSize:centered?(a4.width-photoSize)/2:margin,y:margin,data:resume.photo};
+    if(!portrait)y += photoSize+10;
   }
+  const photoBesideHeader=portrait&&Boolean(resume.photo);
+  const photoBottom=margin+photoSize+10;
   const blocks = documentBlocks(resume).map(block=>{
     const style = textStyle(resume,block.role);
     pdf.setFont("ResumeFont",style.bold ? "bold" : "normal").setFontSize(style.size);
+    const header = ["name","headline","contact"].includes(block.role);
+    const width = photoBesideHeader&&header?maxWidth-photoSize-14:technical&&block.role==="heading"?maxWidth-16:maxWidth;
     const lines = block.text.split(/\r?\n/).flatMap(line=>
-      line.trim() ? pdf.splitTextToSize(line.trim(),maxWidth) as string[] : [""]
+      line.trim() ? pdf.splitTextToSize(line.trim(),width) as string[] : [""]
     ).map(text=>({text,width:pdf.getTextWidth(text)}));
-    return {...block,...style,lines,lineHeight:style.size*1.38};
+    return {...block,...style,header,lines,lineHeight:style.size*1.38};
   });
   for (const [index,block] of blocks.entries()) {
     const heading = block.role === "heading";
-    const header = ["name","headline","contact"].includes(block.role);
+    const {header}=block;
+    if(photoBesideHeader&&!header&&pages.length===1)y=Math.max(y,photoBottom);
     const next = blocks[index+1];
     const keepHeight = block.keep && next ? next.gap+next.lineHeight : 0;
     const ownHeight = Math.min(block.lines.length,block.keep ? 4 : 2)*block.lineHeight;
-    if (y+block.gap+ownHeight+keepHeight > bottom && y > margin) newPage();
+    if (y+block.gap+ownHeight+keepHeight+(heading&&technical?6:0) > bottom && y > margin) newPage();
     if (y > margin) y += block.gap;
+    const band=heading&&technical;
     if (heading && bar) page!.marks.push({x:margin-10,y:y+1,width:3,height:block.size+2,color:resume.color});
     for (const line of block.lines) {
       if (y+block.lineHeight>bottom) newPage();
-      if (line.text) page!.lines.push({...line,x:centered && header ? (a4.width-line.width)/2 : margin,y:y+block.size,size:block.size,color:block.color,bold:block.bold});
+      if(band)page!.marks.push({x:margin,y,width:maxWidth,height:block.lineHeight,color:"#EAF1F7"});
+      if (line.text) page!.lines.push({...line,x:centered && header ? (a4.width-line.width)/2 : margin+(band?8:0),y:y+block.size,size:block.size,color:block.color,bold:block.bold});
       y += block.lineHeight;
     }
+    if(band)y+=3;
     if (heading && rule) {
       page!.marks.push({x:margin,y:y-0.5,width:maxWidth,height:0.55,color:"#ADB7CA"});
       y += 2;
