@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { locales, type Locale } from "../../lib/resume";
 import { siteOrigin } from "../../lib/seo";
+import { UiLanguage } from "../../components/ui-language";
 import "../globals.css";
 
 export const metadata:Metadata = {
@@ -19,5 +20,5 @@ export function generateStaticParams() {
 export default async function Layout({children,params}:{children:ReactNode;params:Promise<{locale:string}>}) {
   const {locale}=await params;
   if(!locales.includes(locale as Locale)) notFound();
-  return <html lang={locale}><body>{children}</body></html>;
+  return <html lang={locale}><body><UiLanguage locale={locale as Locale}>{children}</UiLanguage></body></html>;
 }

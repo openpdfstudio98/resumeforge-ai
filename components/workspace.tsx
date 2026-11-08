@@ -5,13 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { site, type WorkRoute } from "../lib/copy";
 import { copyResume, makeResume, touchResume, templateKeys, templates, type Locale, type Resume, type Template } from "../lib/resume";
 import { work } from "../lib/work-copy";
+import { useCopy, useUi } from "./ui-language";
 const Checker = dynamic(()=>import("./checker").then(m=>m.Checker));
 const Editor = dynamic(()=>import("./editor").then(m=>m.Editor));
 import { jsonDownload, useResumes } from "./storage";
 
 export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
-  const t=work[locale];
-  const s=site[locale];
+  const t=useCopy(work[locale]);
+  const s=useCopy(site[locale]);
+  const ui=useUi();
   const storage=useResumes(locale);
   const {resumes,ready,save,warning,notice}=storage;
   const [query,setQuery]=useState<{id:string;template:Template}>({id:"",template:"classic-ats"});
@@ -50,7 +52,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
   }
   function cards(items:Resume[]) {
     return items.length ? <div className="draft-list">{items.map(r=><article className="draft" key={r.id}>
-      <span className="tile-icon"><FileText size={19}/></span><div><h3>{r.title || templates[r.template].name}</h3><p>{templates[r.template].name} · {new Intl.DateTimeFormat(locale,{dateStyle:"medium"}).format(r.updated)}</p></div>
+      <span className="tile-icon"><FileText size={19}/></span><div><h3 translate="no">{r.title || templates[r.template].name}</h3><p>{templates[r.template].name} · {new Intl.DateTimeFormat(locale,{dateStyle:"medium"}).format(r.updated)}</p></div>
       <div className="actions"><a className="btn" href={`${builder}?id=${r.id}`}>{t.edit}</a>
         {route==="resumes" && <>
           <button className="icon-btn" aria-label={`${t.duplicate} · ${r.title}`} onClick={()=>duplicate(r)}><Copy size={17}/></button>
@@ -65,9 +67,9 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
     {message && <div className="alert" role="alert">{message}{warning==="invalid" && <div className="actions"><button className="btn" onClick={storage.raw}>{t.raw}</button><a className="btn" href={`${root}/resumes`}>{t.back}</a></div>}</div>}
     {notice && <p className="alert" role="status">{notice}</p>}
     {route==="builder" && (selected
-      ? <Editor key={selected.id} locale={locale} resume={selected} warning={warning} update={r=>save(resumes.map(item=>item.id===r.id?touchResume(r):item))}/>
+      ? <Editor key={selected.id} locale={locale} resume={selected} warning={warning} update={r=>save(resumes.map(item=>item.id===r.id?touchResume(r):item),false,Boolean(selected.photo && selected.photo!==r.photo))}/>
       : <><header className="workspace-heading"><div><h1>{s.nav.builder}</h1><p>{s.copy.builder}</p></div></header>
-        <div className="panel empty"><FileText size={32}/>{query.id && <p role="alert">{t.missing}</p>}<h2>{templates[query.template].name}</h2><p>{templates[query.template].description[locale]}</p><button className="btn primary" onClick={create}><Plus size={18}/>{t.create}</button><a className="btn" href={`${root}/templates`}>{s.browse}</a></div></>)}
+        <div className="panel empty"><FileText size={32}/>{query.id && <p role="alert">{t.missing}</p>}<h2>{templates[query.template].name}</h2><p>{ui(templates[query.template].description[locale])}</p><button className="btn primary" onClick={create}><Plus size={18}/>{t.create}</button><a className="btn" href={`${root}/templates`}>{s.browse}</a></div></>)}
     {route==="ats" && <Checker key={query.id} locale={locale} resumes={resumes} id={query.id}/>}
     {route==="resumes" && <>
       <header className="workspace-heading"><div><div className="eyebrow">{t.files}</div><h1>{s.nav.resumes}</h1><p>{s.copy.resumes}</p></div><a className="btn primary" href={builder}><Plus size={18}/>{t.create}</a></header>

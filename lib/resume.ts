@@ -1,3 +1,5 @@
+import { isResumePhoto } from "./photo";
+
 export const locales = ["en", "ms"] as const;
 export type Locale = typeof locales[number];
 export const sectionKeys = ["summary", "experience", "education", "skills", "certifications", "projects", "languages", "custom"] as const;
@@ -14,6 +16,7 @@ export type Resume = {
   title: string;
   locale: Locale;
   updated: number;
+  photo?: string;
   personal: Record<typeof personalFields[number], string>;
   order: SectionKey[];
   sections: Record<SectionKey, Entry[]>;
@@ -88,7 +91,7 @@ export function readBackup(input: string): Resume[] {
   const ids = new Set<string>();
   return payload.resumes.map(value => {
     const item = object(value);
-    const {id,title,locale,updated,order,template,font,color,size} = item;
+    const {id,title,locale,updated,order,template,font,color,size,photo} = item;
     if (typeof id !== "string" || !/^[\w-]{1,80}$/.test(id) || ids.has(id) || typeof title !== "string" || title.length > 120 ||
         !member(locale,locales) || typeof updated !== "number" || !Number.isSafeInteger(updated) || updated < 0 || updated > 8.64e15 ||
         !member(template,templateKeys) || !member(font,fonts) || typeof color !== "string" || !/^#[0-9a-f]{6}$/i.test(color) ||
@@ -96,6 +99,7 @@ export function readBackup(input: string): Resume[] {
         order.length !== sectionKeys.length || new Set(order).size !== order.length || !order.every(key => member(key,sectionKeys))) {
       throw new Error("Invalid resume");
     }
+    if (photo !== undefined && !isResumePhoto(photo)) throw new Error("Invalid photo");
     ids.add(id);
     const data = object(item.sections);
     const sections = Object.fromEntries(sectionKeys.map(key => {
@@ -109,7 +113,7 @@ export function readBackup(input: string): Resume[] {
         return {id:row.id,...strings(row,entryFields,10_000)};
       })];
     })) as Resume["sections"];
-    return {id,title,locale,updated,order,template,font,color,size,sections,personal:strings(item.personal,personalFields,250)};
+    return {id,title,locale,updated,order,template,font,color,size,sections,...(photo ? {photo} : {}),personal:strings(item.personal,personalFields,250)};
   });
 }
 export function backup(resumes: Resume[]) {
