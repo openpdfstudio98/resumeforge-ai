@@ -10,7 +10,7 @@ const muted = "#4D586C";
 export type TextLine = {text:string; x:number; y:number; width:number; size:number; color:string; bold:boolean};
 type Decoration = {x:number;y:number;width:number;height:number;color:string};
 export const photoSize = 65;
-export type Page = {lines:TextLine[]; marks:Decoration[]; dots?:{x:number;y:number;radius:number;color:string}[]; photo?: {x:number;y:number;data:string}};
+export type Page = {lines:TextLine[]; marks:Decoration[]; dots?:{x:number;y:number;radius:number;color:string}[]; photo?: {x:number;y:number;data:string;round?:boolean}};
 
 export const family = {sans:"Arial",serif:"Times New Roman",mono:"Courier New"};
 export function appearance(r: Resume) {
@@ -143,12 +143,12 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   }
   function measure(block:Block,width:number,inSidebar:boolean) {
     const style=textStyle(resume,block.role);
-    const size=inSidebar?Math.min(style.size,10):style.size;
+    const size=inSidebar?Math.min(style.size,11):block.role==="name"?34:style.size+0.5;
     const color=inSidebar?design.sideInk:style.color;
     pdf.setFont("ResumeFont",style.bold?"bold":"normal").setFontSize(size);
     const lines=premiumText(block).split(/\r?\n/).flatMap(line=>line.trim()?pdf.splitTextToSize(line.trim(),width) as string[]:[""])
       .map(text=>({text,width:pdf.getTextWidth(text)}));
-    return {...block,...style,size,color,lines,height:size*1.42};
+    return {...block,...style,size,color,lines,height:size*1.54};
   }
 
   const first=ensurePage(0);
@@ -182,7 +182,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   let sideStart=headerBottom?headerBottom+22:top;
   if(resume.photo) {
     const inMasthead=design.masthead==="filled";
-    first.photo={x:inMasthead?padding:(sideWidth-photoSize)/2,y:inMasthead?23:sideStart,data:resume.photo};
+    first.photo={x:inMasthead?padding:(sideWidth-photoSize)/2,y:inMasthead?23:sideStart,data:resume.photo,round:true};
     if(!inMasthead)sideStart+=photoSize+15;
   }
   function place(lane:Block[],x:number,width:number,start:number,inSidebar:boolean) {
@@ -193,7 +193,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
     let index=0;
     let y=start;
     for(const [offset,block] of measured.entries()) {
-      const gap=block.gap;
+      const gap=block.gap+(block.role==="heading"?6:0);
       const next=measured[offset+1];
       if(y+gap+block.height+(block.keep&&next?next.gap+next.height:0)>bottom) {index++;y=top;}
       if(y>top)y+=gap;
@@ -225,7 +225,13 @@ export function generatePdf(resume:Resume, bytes:FontBytes) {
     if (index) pdf.addPage("a4","portrait");
     for (const mark of page.marks) pdf.setFillColor(mark.color).rect(mark.x,mark.y,mark.width,mark.height,"F");
     for (const dot of page.dots??[]) pdf.setFillColor(dot.color).circle(dot.x,dot.y,dot.radius,"F");
-    if (page.photo) pdf.addImage(page.photo.data,"JPEG",page.photo.x,page.photo.y,photoSize,photoSize);
+    if (page.photo) {
+      const {x,y,data,round}=page.photo;
+      const radius=photoSize/2;
+      if(round)pdf.saveGraphicsState().circle(x+radius,y+radius,radius,null).clip().discardPath();
+      pdf.addImage(data,"JPEG",x,y,photoSize,photoSize);
+      if(round)pdf.restoreGraphicsState().setDrawColor("#FFFFFF").setLineWidth(1.5).circle(x+radius,y+radius,radius,"S");
+    }
     for (const line of page.lines) {
       pdf.setTextColor(line.color).setFont("ResumeFont",line.bold ? "bold" : "normal").setFontSize(line.size);
       pdf.text(line.text,line.x,line.y);

@@ -1,3 +1,4 @@
+import { premiumStyle } from "./premium";
 import { isResumePhoto } from "./photo";
 
 export const locales = ["en", "ms"] as const;
@@ -123,6 +124,29 @@ export function sampleResume(locale: Locale, template: Template): Resume {
     r.sections.experience.push({...blankEntry(),title:previousRole,organization:creative?"Cedar Design":"Cedar Services",dates:"2021 – 2023",description:previousWork});
   }
   r.sections.languages=[{...blankEntry(),title:en?"English and Malay":"Bahasa Inggeris dan Bahasa Melayu",description:en?"Professional working proficiency":"Kecekapan profesional"}];
+  if(premiumStyle(template)) {
+    const creative=template==="citrus-studio"||template==="graphite-portfolio";
+    r.personal.website=creative?"maya.example.com":"portfolio.example.com";
+    r.sections.summary[0].description+=creative
+      ?(en?" Builds practical brand toolkits that help teams launch and publish confidently across channels.":" Membina kit panduan jenama yang memudahkan pasukan menerbitkan bahan secara konsisten di pelbagai saluran.")
+      :(en?" Combines clear reporting with hands-on process improvement and works closely with frontline teams.":" Menggabungkan pelaporan yang jelas dengan penambahbaikan proses dan bekerjasama rapat dengan pasukan operasi.");
+    r.sections.experience[1].description+=creative
+      ?(en?"\nMaintained a library of templates and prepared print proofs for approval.":"\nMenyelenggara koleksi templat dan menyediakan pruf cetakan untuk kelulusan.")
+      :(en?"\nUpdated shift records and flagged recurring delays for the planning team.":"\nMengemas kini rekod syif dan memaklumkan kelewatan berulang kepada pasukan perancangan.");
+    r.sections.projects.push({...blankEntry(),
+      title:creative?(en?"Studio campaign toolkit":"Kit kempen studio"):(en?"Team handover playbook":"Panduan serahan tugas"),
+      description:creative
+        ?(en?"Built a reusable set of launch assets, from campaign typography to social layouts. Documented export settings and shared a review checklist with the team.":"Membina set bahan pelancaran daripada tipografi kempen hingga susun atur media sosial. Mendokumenkan tetapan eksport dan berkongsi senarai semak dengan pasukan.")
+        :(en?"Created a handover guide with task owners, open issues and escalation steps. Piloted the guide with two teams and revised it after feedback.":"Menyediakan panduan serahan dengan pemilik tugas, isu terbuka dan langkah eskalasi. Menguji panduan dengan dua pasukan dan menyemaknya selepas menerima maklum balas."),
+    });
+    r.sections.skills.push({...blankEntry(),description:creative
+      ?(en?"Art direction, Typography, Campaign design, Print production":"Arahan seni, Tipografi, Reka bentuk kempen, Pengeluaran cetak")
+      :(en?"Process improvement, Reporting, Team coordination, Documentation":"Penambahbaikan proses, Pelaporan, Penyelarasan pasukan, Dokumentasi")});
+    r.sections.certifications=[{...blankEntry(),
+      title:creative?(en?"Visual Design Foundations":"Asas Reka Bentuk Visual"):(en?"Process Improvement Foundations":"Asas Penambahbaikan Proses"),
+      organization:"Meridian Learning",dates:"2025",
+    }];
+  }
   return r;
 }
 function object(value: unknown): Record<string, unknown> {

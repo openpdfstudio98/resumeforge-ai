@@ -275,7 +275,7 @@ test("one click opens an editable portrait sample and switching themes keeps the
 });
 
 
-test("gallery shows completed samples and filters to matching themes",async({page})=>{
+test("gallery shows completed samples and filters to matching themes",async({page},info)=>{
   await page.goto("/en/templates");
   const cards=page.locator(".template-card");
   await expect(cards).toHaveCount(templateKeys.length);
@@ -293,4 +293,21 @@ test("gallery shows completed samples and filters to matching themes",async({pag
   await page.getByRole("button",{name:"All styles",exact:true}).click();
   await page.getByRole("link",{name:"Try this sample · Classic ATS",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
+  await page.goto("/en/templates/teal-timeline");
+  await page.getByRole("link",{name:"Try this sample",exact:true}).click();
+  await expect(page.locator(".document-sheet image[clip-path]")).toHaveCount(1);
+  for (const format of ["PDF","DOCX"]) {
+    const wait=page.waitForEvent("download");
+    await page.getByRole("button",{name:`Download ${format}`}).click();
+    const file=info.outputPath(`teal-timeline.${format.toLowerCase()}`);
+    await (await wait).saveAs(file);
+    if(format==="PDF") {
+      expect(execFileSync("pdfimages",["-list",file],{encoding:"utf8"})).toMatch(/image\s+\d+\s+\d+/);
+      expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Alyssa Tan");
+    } else {
+      const xml=execFileSync("unzip",["-p",file,"word/document.xml"],{encoding:"utf8"});
+      expect(xml).toContain('w:fill="006D70"');
+      expect(xml).toContain("<w:drawing>");
+    }
+  }
 });
