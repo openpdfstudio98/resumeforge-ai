@@ -78,6 +78,7 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "industrial-mono":{name:"Industrial Mono",color:"#32363A",font:"mono",description:{en:"A monochrome editorial design with a compact sidebar.",ms:"Reka bentuk editorial monokrom dengan sidebar ringkas."}},
   "academic-essential":{name:"Academic Essential",color:"#37465D",font:"serif",description:{en:"A restrained academic layout with space for detailed experience.",ms:"Susun atur akademik ringkas untuk pengalaman terperinci."}},
 };
+export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
 export const RECOVERY_KEY = "resumeforge:v1:previous";
 export const BACKUP_LIMIT = 4_000_000;

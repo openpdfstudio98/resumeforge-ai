@@ -1,9 +1,11 @@
 "use client";
+import { sampleHasPhoto } from "../lib/premium";
 import { Copy, FileText, FolderOpen, LayoutTemplate, Plus, ScanLine, ShieldCheck, Trash2, Upload } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { site, type WorkRoute } from "../lib/copy";
-import { copyResume, makeResume, sampleResume, touchResume, templateKeys, templates, type Locale, type Resume, type Template } from "../lib/resume";
+import { copyResume, demoPortraitPath, makeResume, sampleResume, touchResume, templateKeys, templates, type Locale, type Resume, type Template } from "../lib/resume";
+import { preparePhoto } from "../lib/photo";
 import { extraCopy } from "../lib/ui-language";
 import { work } from "../lib/work-copy";
 import { useCopy, useUi } from "./ui-language";
@@ -48,12 +50,20 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
   const openSample=useEffectEvent(openDraft);
   useEffect(()=>{
     if(!ready||route!=="builder"||!query.sample||query.id)return;
-    const frame=requestAnimationFrame(()=>{
+    const controller=new AbortController();
+    async function loadSample() {
       const draft=sampleResume(locale,query.template);
       draft.title=extraCopy[locale].sample;
-      openSample(draft);
-    });
-    return ()=>cancelAnimationFrame(frame);
+      if(sampleHasPhoto(query.template)) {
+        try {
+          const response=await fetch(demoPortraitPath,{signal:controller.signal});
+          if(response.ok)draft.photo=await preparePhoto(new File([await response.blob()],"portrait.webp",{type:"image/webp"}));
+        } catch { /* Keep the editable sample available even if the image fails to load. */ }
+      }
+      if(!controller.signal.aborted)openSample(draft);
+    }
+    const frame=requestAnimationFrame(()=>void loadSample());
+    return ()=>{cancelAnimationFrame(frame);controller.abort();};
   },[locale,query.id,query.sample,query.template,ready,route]);
   function create() {
     openDraft(makeResume(locale,query.template));

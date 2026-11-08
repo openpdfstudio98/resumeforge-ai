@@ -1,3 +1,4 @@
+import { galleryOrder } from "../lib/template-gallery";
 import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -258,7 +259,7 @@ test("one click opens an editable portrait sample and switching themes keeps the
   await page.goto("/en");
   await page.getByRole("link",{name:"Try this sample",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
-  await expect(page.locator(".document-sheet image")).toHaveCount(0);
+  await expect(page.locator(".document-sheet image")).toHaveCount(1);
   await page.getByLabel("Full name",{exact:true}).fill("Edited portrait");
   await page.getByRole("button",{name:"Design",exact:true}).click();
   await expect(page.getByRole("combobox",{name:"Template",exact:true})).toHaveValue("modern-portrait");
@@ -266,7 +267,7 @@ test("one click opens an editable portrait sample and switching themes keeps the
   await page.reload();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Edited portrait");
   await expect(page.locator(".section-toggle").nth(1)).toHaveText("Work Experience");
-  await expect(page.locator(".document-sheet image")).toHaveCount(0);
+  await expect(page.locator(".document-sheet image")).toHaveCount(1);
   await page.goto("/en/templates/engineering-blue");
   await page.getByRole("link",{name:"Try this sample",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Daniel Lim");
@@ -274,16 +275,44 @@ test("one click opens an editable portrait sample and switching themes keeps the
 });
 
 
-test("gallery samples contain no default portrait",async({page})=>{
+test("gallery shows completed samples and filters to matching themes",async({page},info)=>{
   await page.goto("/en/templates");
   const cards=page.locator(".template-card");
   await expect(cards).toHaveCount(templateKeys.length);
-  await expect(cards.locator(".document-sheet image")).toHaveCount(0);
+  for (const [index,template] of galleryOrder.entries()) {
+    await expect(cards.nth(index).locator(".document-sheet text").first()).toHaveText(sampleResume("en",template).personal.name);
+  }
+  await page.getByRole("button",{name:"Studio collection",exact:true}).click();
+  await expect(cards).toHaveCount(4);
+  await expect(cards.locator("svg image")).toHaveCount(3);
+  await page.getByRole("button",{name:"Premium collection",exact:true}).click();
+  await expect(cards).toHaveCount(6);
+  await expect(cards.locator("svg image")).toHaveCount(5);
+  await page.getByRole("button",{name:"Technical",exact:true}).click();
+  await expect(cards).toHaveCount(2);
   await page.getByRole("button",{name:"With photo",exact:true}).click();
-  await expect(cards.first()).toBeVisible();
-  await expect(cards.locator(".document-sheet image")).toHaveCount(0);
+  await expect(cards).toHaveCount(9);
+  await expect(cards.locator("svg image")).toHaveCount(9);
+  await page.getByRole("button",{name:"All styles",exact:true}).click();
+  await page.getByRole("link",{name:"Try this sample · Classic ATS",exact:true}).click();
+  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");
   await page.goto("/en/templates/bloom-studio");
   await page.getByRole("link",{name:"Try this sample",exact:true}).click();
-  await expect(page.locator(".document-sheet image")).toHaveCount(0);
-  await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Maya Lee");
+  const portrait=page.locator(".document-sheet image[clip-path]");
+  await expect(portrait).toHaveCount(1);
+  expect(Number(await portrait.getAttribute("x"))).toBeGreaterThan(400);
+  for (const format of ["PDF","DOCX"]) {
+    const wait=page.waitForEvent("download");
+    await page.getByRole("button",{name:`Download ${format}`}).click();
+    const file=info.outputPath(`bloom-studio.${format.toLowerCase()}`);
+    await (await wait).saveAs(file);
+    if(format==="PDF") {
+      expect(execFileSync("pdfimages",["-list",file],{encoding:"utf8"})).toMatch(/image\s+\d+\s+\d+/);
+      expect(execFileSync("pdftotext",[file,"-"],{encoding:"utf8"})).toContain("Maya Lee");
+    } else {
+      const xml=execFileSync("unzip",["-p",file,"word/document.xml"],{encoding:"utf8"});
+      expect(xml).toContain('w:fill="F7DCE4"');
+      expect(xml).toContain("<w:drawing>");
+    }
+  }
 });

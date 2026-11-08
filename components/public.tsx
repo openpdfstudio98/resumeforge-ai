@@ -1,4 +1,5 @@
 import { ArrowRight, Check, FileText, FolderOpen, LayoutTemplate, ScanLine, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { articles } from "../lib/content";
 import { galleryOrder, galleryCopy, templateGroups } from "../lib/template-gallery";
 import { GalleryFilters } from "./gallery-filters";
@@ -6,7 +7,7 @@ import { TemplateSample } from "./template-sample";
 import { Ui } from "./ui-language";
 import { extraCopy } from "../lib/ui-language";
 import { guideKeys, site, type NavKey } from "../lib/copy";
-import { labels, sampleResume, templates, type Locale, type Template } from "../lib/resume";
+import { demoPortraitPath, labels, sampleResume, templates, type Locale, type Template } from "../lib/resume";
 
 function TemplateCard({locale,template}:{locale:Locale;template:Template}) {
   const root=`/${locale}`;
@@ -42,6 +43,7 @@ function ResumeExample({locale}:{locale:Locale}) {
           <p className="hero-sample-role">{personal.headline}</p>
           <p className="hero-sample-contact"><span>{personal.location}</span><bdi>{personal.email}</bdi></p>
         </div>
+        <Image src={demoPortraitPath} alt="" width={72} height={72} unoptimized/>
       </div>
       <div className="hero-sample-section">
         <p className="hero-sample-heading"><Ui>{headings.summary}</Ui></p>
