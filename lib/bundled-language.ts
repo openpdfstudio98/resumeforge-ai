@@ -99,6 +99,7 @@ const translations:Translation[] = [
   [photo.add,"Tambah foto","Añadir foto","添加照片","إضافة صورة"],
   [photo.replace,"Ganti foto","Cambiar foto","更换照片","تغيير الصورة"],
   [photo.remove,"Hapus foto","Quitar foto","删除照片","إزالة الصورة"],
+  ["Sample resume","Contoh CV","Ejemplo de currículum","简历示例","نموذج سيرة ذاتية"],
   ["Use this template","Gunakan templat ini","Usar esta plantilla","使用此模板","استخدم هذا القالب"],
   ["All resumes","Semua CV","Todos los currículums","全部简历","كل السير الذاتية"],
   ["From blank page to application","Dari halaman kosong hingga siap melamar","De una página en blanco a tu candidatura","从空白页到求职申请","من صفحة فارغة إلى التقديم"],

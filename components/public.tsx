@@ -1,9 +1,10 @@
-import { ArrowRight, Check, FileText, FolderOpen, LayoutTemplate, ScanLine, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Check, FileText, FolderOpen, LayoutTemplate, ScanLine, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { articles } from "../lib/content";
 import { Ui } from "./ui-language";
 import { extraCopy } from "../lib/ui-language";
 import { guideKeys, site, type NavKey } from "../lib/copy";
-import { templateKeys, templates, type Locale, type Template } from "../lib/resume";
+import { labels, sampleResume, templateKeys, templates, type Locale, type Template } from "../lib/resume";
 
 export function MiniResume({template}:{template:Template}) {
   const accent=templates[template].color;
@@ -31,6 +32,49 @@ function TemplateCard({locale,template}:{locale:Locale;template:Template}) {
     <p><Ui>{templates[template].description[locale]}</Ui></p>
   </a>;
 }
+function ResumeExample({locale}:{locale:Locale}) {
+  const {personal,sections}=sampleResume(locale,"modern-executive");
+  const experience=sections.experience[0];
+  const education=sections.education[0];
+  const headings=labels[locale];
+  return <figure className="hero-visual" aria-labelledby="hero-sample-label">
+    <div className="hero-gridlines" aria-hidden="true"/>
+    <figcaption className="hero-sample-caption">
+      <span id="hero-sample-label" className="pill"><Ui>{extraCopy[locale].sample}</Ui></span>
+      <span className="hero-sample-format"><FileText size={15} aria-hidden="true"/> A4 · PDF / DOCX</span>
+    </figcaption>
+    <div className="hero-sample-paper">
+      <div className="hero-sample-header">
+        <Image src="/images/resume-demo-portrait.webp" alt="" width={72} height={72} unoptimized/>
+        <div>
+          <p className="hero-sample-name">{personal.name}</p>
+          <p className="hero-sample-role">{personal.headline}</p>
+          <p className="hero-sample-contact"><span>{personal.location}</span><bdi>{personal.email}</bdi></p>
+        </div>
+      </div>
+      <div className="hero-sample-section">
+        <p className="hero-sample-heading"><Ui>{headings.summary}</Ui></p>
+        <p>{sections.summary[0].description}</p>
+      </div>
+      <div className="hero-sample-section">
+        <p className="hero-sample-heading"><Ui>{headings.experience}</Ui></p>
+        <div className="hero-sample-job"><strong>{experience.title}</strong><span>{experience.dates}</span></div>
+        <p>{experience.organization}</p>
+        <ul>{experience.description.split("\n").map(line=><li key={line}>{line}</li>)}</ul>
+      </div>
+      <div className="hero-sample-section">
+        <p className="hero-sample-heading"><Ui>{headings.education}</Ui></p>
+        <p><strong>{education.title}</strong></p>
+        <p>{education.organization} · {education.dates}</p>
+      </div>
+      <div className="hero-sample-section">
+        <p className="hero-sample-heading"><Ui>{headings.skills}</Ui></p>
+        <p>{sections.skills[0].description}</p>
+      </div>
+    </div>
+  </figure>;
+}
+
 export function Home({locale}:{locale:Locale}) {
   const t=site[locale];
   const root=`/${locale}`;
@@ -43,13 +87,7 @@ export function Home({locale}:{locale:Locale}) {
         <div className="actions"><a className="btn primary" href={`${root}/builder`}><Ui>{t.start}</Ui><ArrowRight size={19}/></a><a className="btn" href={`${root}/templates`}><Ui>{t.browse}</Ui></a></div>
         <div className="hero-proof">{[t.noAccount,t.free].map(point=><span key={point}><Check size={16}/><Ui>{point}</Ui></span>)}</div>
       </div>
-      <div className="hero-visual" aria-hidden="true">
-        <div className="hero-gridlines"/>
-        <div className="hero-document back"><MiniResume template="creative-professional"/></div>
-        <div className="hero-document front"><MiniResume template="modern-executive"/></div>
-        <div className="floating-label float-top"><FileText size={19}/> A4 <span>PDF / DOCX</span></div>
-        <div className="floating-label float-bottom"><ShieldCheck size={20}/> <Ui>{t.local}</Ui></div>
-      </div>
+      <ResumeExample locale={locale}/>
     </div></section>
     <section className="public-section"><div className="eyebrow"><Ui>{t.workspace}</Ui></div><h2><Ui>{t.toolkit}</Ui></h2><p><Ui>{t.toolkitCopy}</Ui></p>
       <div className="tool-grid">{tools.map(([key,Icon])=><a href={`${root}/${key}`} className="panel tool-card" key={key}><span className="tile-icon"><Icon size={21}/></span><h3><Ui>{t.nav[key]}</Ui> <ArrowRight size={16}/></h3><p><Ui>{t.copy[key]}</Ui></p></a>)}</div>
