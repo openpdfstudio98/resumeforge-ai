@@ -23,8 +23,8 @@ export async function generateMetadata({params}:Props):Promise<Metadata> {
   return {
     title,description,robots:{index:publicPage&&indexable(),follow:true},
     alternates:origin&&publicPage ? {canonical:`${origin}/${locale}${suffix}`,languages:{en:`${origin}/en${suffix}`,ms:`${origin}/ms${suffix}`,"x-default":`${origin}/en${suffix}`}} : undefined,
-    openGraph:{title:`${title} | Civora Resume`,description,type:"website",siteName:"Civora Resume",locale:locale==="en"?"en_US":undefined,url:origin?`${origin}/${locale}${suffix}`:undefined},
-    twitter:{card:"summary",title,description},
+    openGraph:{title:`${title} | Civora Resume`,description,type:"website",siteName:"Civora Resume",locale:locale==="en"?"en_US":undefined,url:origin?`${origin}/${locale}${suffix}`:undefined,images:[{url:"https://civoraresume.vercel.app/civora-social.png",width:1200,height:630,alt:"Civora Resume — free resume builder"}]},
+    twitter:{card:"summary_large_image",title,description,images:["https://civoraresume.vercel.app/civora-social.png"]},
   };
 }
 export default async function Page({params}:Props) {
