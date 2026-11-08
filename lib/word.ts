@@ -1,5 +1,5 @@
 import { AlignmentType, BorderStyle, Document, HeadingLevel, ImageRun, Packer, Paragraph, Table, TableCell, TableLayoutType, TableRow, TextRun, WidthType } from "docx";
-import { a4, appearance, family, photoSize, readable, textStyle } from "./document";
+import { a4, appearance, family, isSingleColumn, photoSize, readable, textStyle } from "./document";
 import { isSidebarBlock, isTitleBlock, premiumStyle, premiumText } from "./premium";
 import { documentBlocks, type Block } from "./blocks";
 import type { Resume } from "./resume";
@@ -8,7 +8,7 @@ export function wordDocument(resume: Resume) {
   const design = appearance(resume);
   const accent = resume.color.slice(1);
   const blocks=documentBlocks(resume);
-  const premium=premiumStyle(resume.template);
+  const premium=isSingleColumn(resume.template)?undefined:premiumStyle(resume.template);
   const children:(Paragraph|Table)[] = premium ? premiumChildren(resume,blocks,premium) : blocks.map(block=>{
     const style = textStyle(resume,block.role);
     const isHeading = block.role === "heading";

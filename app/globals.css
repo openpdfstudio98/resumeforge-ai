@@ -244,3 +244,13 @@ dialog .actions{margin-top:15px}
 @media(max-width:430px){.language-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.locale-btn{padding-inline:9px}.photo-card{gap:9px}.photo-thumb{width:42px}}
 
 @media(max-width:920px){.top-nav,.desktop-cta{display:none}.mobile-nav{display:flex;flex-wrap:wrap;gap:3px 14px;padding:0 16px 8px}.mobile-nav a{display:inline-flex;align-items:center;min-height:34px}}
+
+/* Gallery: generous paper previews and restrained, professional framing. */
+.template-grid{gap:24px}
+.template-card{border-color:#e1e6ee;border-radius:16px;padding:12px;background:#fff;box-shadow:0 8px 28px #1826410c}
+.template-card:hover{border-color:#aeb9dd;box-shadow:0 16px 38px #18264118}
+.template-card-copy{padding:9px 8px 8px;gap:10px}
+.template-figure{background:#f0f2f6;padding:clamp(14px,1.5vw,20px)}
+.template-figure .document-sheet{width:min(100%,300px);box-shadow:0 12px 30px #17243d24}
+.template-figure-full .document-sheet{width:min(100%,560px)}
+@media(min-width:800px) and (max-width:1100px){.template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -6,24 +6,33 @@ import { isSidebarBlock, isTitleBlock, premiumStyle, premiumText } from "./premi
 
 export const a4 = { width: 595.28, height: 841.89 };
 const ink = "#20283B";
-const muted = "#4D586C";
+const singleColumn = new Set(["mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial", "heritage-classic", "signature-minimal", "academic-scholar"]);
+const muted = "#566477";
+const narrowSidebar = new Set(["graphite-portfolio", "onyx-gold", "obsidian-ink", "sage-column"]);
+const wideSidebar = new Set(["citrus-studio", "midnight-executive", "cobalt-slate"]);
+const compactHeaders = new Set(["silver-editorial", "sage-column", "graphite-portfolio"]);
+const accentBars = new Set(["bloom-studio", "violet-atelier", "canva-bloom", "rose-atelier", "citrus-studio","studio-pastel","creative-spectrum"]);
+const understated = new Set(["classic-ats", "minimal-professional", "mono-grid", "aurora-minimal", "editorial-mono", "paper-loom", "ivory-editorial"]);
 export type TextLine = {text:string; x:number; y:number; width:number; size:number; color:string; bold:boolean};
 type Decoration = {x:number;y:number;width:number;height:number;color:string};
 export const photoSize = 65;
 export type Page = {lines:TextLine[]; marks:Decoration[]; dots?:{x:number;y:number;radius:number;color:string}[]; photo?: {x:number;y:number;data:string;round?:boolean}};
 
 export const family = {sans:"Arial",serif:"Times New Roman",mono:"Courier New"};
+export function isSingleColumn(template:Resume["template"]) {
+  return singleColumn.has(template) || !premiumStyle(template);
+}
 export function appearance(r: Resume) {
   const portrait=r.template==="modern-portrait";
   const technical=r.template==="engineering-blue";
   return {
     portrait,technical,
-    margin:r.template === "minimal-professional" ? 62 : r.template === "technical-engineer" ? 45 : 52,
-    centered:r.template === "minimal-professional" || r.template === "modern-executive",
-    rule:r.template === "classic-ats" || r.template === "technical-engineer",
-    top:portrait || technical || r.template === "modern-executive" || r.template === "creative-professional",
-    bar:r.template === "fresh-graduate" || r.template === "creative-professional",
-    nameSize:portrait ? 33 : technical ? 28 : r.template === "creative-professional" ? 32 : r.template === "modern-executive" ? 30 : r.template === "technical-engineer" ? 24 : 27,
+    margin:understated.has(r.template) ? 56 : r.template === "technical-engineer" ? 46 : 50,
+    centered:["minimal-professional","modern-executive","ivory-editorial","editorial-mono"].includes(r.template),
+    rule:["classic-ats","technical-engineer","mono-grid","aurora-minimal","editorial-mono","paper-loom","ivory-editorial","heritage-classic","academic-scholar"].includes(r.template),
+    top:portrait || technical || ["modern-executive","creative-professional","aurora-minimal","paper-loom","signature-minimal"].includes(r.template),
+    bar:["fresh-graduate","creative-professional","technical-engineer"].includes(r.template),
+    nameSize:portrait ? 33 : technical ? 31 : r.template === "creative-professional" ? 34 : r.template === "modern-executive" ? 32 : r.template === "technical-engineer" ? 29 : 30,
   };
 }
 export function readable(color:string) {
@@ -31,8 +40,12 @@ export function readable(color:string) {
   const [r,g,b] = value.map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
   return 1.05/(0.2126*r+0.7152*g+0.0722*b+0.05)>=4.5 ? color : ink;
 }
+function contrastOn(background:string) {
+  const [r,g,b] = background.slice(1).match(/../g)!.map(hex=>parseInt(hex,16)/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
+  return 0.2126*r+0.7152*g+0.0722*b < 0.18 ? "#FFFFFF" : ink;
+}
 export function textStyle(r:Resume, role:Role) {
-  const sizes:Record<Role,number> = {name:appearance(r).nameSize,headline:r.size+3,contact:r.size-0.5,heading:r.size+1,title:r.size,meta:r.size-0.5,body:r.size};
+  const sizes:Record<Role,number> = {name:appearance(r).nameSize,headline:r.size+2,contact:r.size-0.2,heading:r.size+1.5,title:r.size+0.5,meta:r.size-0.3,body:r.size};
   return {
     size:sizes[role], bold:["name","heading","title"].includes(role),
     color:role === "heading" || role === "name" ? readable(r.color) : role === "contact" || role === "meta" ? muted : ink,
@@ -62,7 +75,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     pdf.addFileToVFS(`${style}.ttf`,bytes[index]);
     pdf.addFont(`${style}.ttf`,"ResumeFont",style);
   }
-  if(premiumStyle(resume.template))return {pdf,pages:layoutPremium(resume,pdf)};
+  if(!isSingleColumn(resume.template))return {pdf,pages:layoutPremium(resume,pdf)};
   const {margin,centered,rule,top,bar,portrait,technical} = appearance(resume);
   const bottom = a4.height-margin;
   const maxWidth = a4.width-2*margin;
@@ -73,7 +86,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     page = {lines:[],marks:[]};
     pages.push(page);
     y = margin;
-    if (top) page.marks.push({x:0,y:0,width:a4.width,height:6,color:resume.color});
+    if (top) page.marks.push({x:0,y:0,width:a4.width,height:7,color:resume.color});
   }
   newPage();
   if (resume.photo) {
@@ -111,7 +124,7 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
     }
     if(band)y+=3;
     if (heading && rule) {
-      page!.marks.push({x:margin,y:y-0.5,width:maxWidth,height:0.55,color:"#ADB7CA"});
+      page!.marks.push({x:margin,y:y-0.5,width:maxWidth,height:0.65,color:"#CBD3DD"});
       y += 2;
     }
   }
@@ -120,17 +133,17 @@ export function layoutPdf(resume:Resume, bytes:FontBytes) {
 
 function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   const design=premiumStyle(resume.template)!;
-  const sideWidth=174;
-  const padding=24;
+  const sideWidth=narrowSidebar.has(resume.template)?150:wideSidebar.has(resume.template)?180:165;
+  const padding=23;
   const sideX=design.rightSidebar?a4.width-sideWidth:0;
-  const mainX=design.rightSidebar?29:sideWidth+30;
-  const mainWidth=a4.width-sideWidth-59;
+  const mainX=design.rightSidebar?38:sideWidth+38;
+  const mainWidth=a4.width-sideWidth-76;
   const panelInset=design.framed?12:0;
   const panelWidth=sideWidth-2*panelInset;
   const trim=design.trim??resume.color;
   const filled=design.masthead==="filled";
   const top=34;
-  const titleTop=design.ornaments?54:top;
+  const titleTop=design.ornaments?48:compactHeaders.has(resume.template)?29:top;
   const bottom=a4.height-31;
   const pages:Page[]=[];
   const blocks=documentBlocks(resume);
@@ -148,12 +161,12 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   }
   function measure(block:Block,width:number,inSidebar:boolean) {
     const style=textStyle(resume,block.role);
-    const size=inSidebar?Math.min(style.size,11):block.role==="name"?34:style.size+0.5;
+    const size=inSidebar?Math.min(style.size,10.5):block.role==="name"?(compactHeaders.has(resume.template)?31:35):style.size;
     const color=inSidebar?design.sideInk:style.color;
     pdf.setFont("ResumeFont",style.bold?"bold":"normal").setFontSize(size);
     const lines=premiumText(block).split(/\r?\n/).flatMap(line=>line.trim()?pdf.splitTextToSize(line.trim(),width) as string[]:[""])
       .map(text=>({text,width:pdf.getTextWidth(text)}));
-    return {...block,...style,size,color,lines,height:size*1.54};
+    return {...block,...style,size,color,lines,height:size*(inSidebar?1.46:1.4)};
   }
 
   const first=ensurePage(0);
@@ -167,6 +180,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   const headerBottom=fullHeader?Math.max(titleBottom,photoInHeader?112:0):0;
   if(filled) {
     first.marks.push({x:0,y:0,width:a4.width,height:headerBottom,color:design.mastheadFill??readable(resume.color)});
+    if(accentBars.has(resume.template))first.marks.push({x:0,y:headerBottom-4,width:a4.width,height:4,color:trim});
   } else if(design.masthead==="rule") {
     first.marks.push({x:0,y:0,width:a4.width,height:headerBottom,color:design.mastheadFill??"#FFFFFF"},{x:padding,y:headerBottom,width:a4.width-2*padding,height:1,color:design.trim??"#9A9FA8"});
   } else {
@@ -188,7 +202,7 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   for(const block of titleBlocks) {
     for(const line of block.lines) {
       const x=design.masthead==="rule"?(a4.width-line.width)/2:fullHeader?titleInset:mainX;
-      first.lines.push({...line,x,y:titleY+block.size,size:block.size,bold:block.bold,color:filled&&!design.mastheadFill?"#FFFFFF":block.color});
+      first.lines.push({...line,x,y:titleY+block.size,size:block.size,bold:block.bold,color:filled ? contrastOn(design.mastheadFill??readable(resume.color)) : block.color});
       titleY+=block.height;
     }
     titleY+=3;
@@ -202,12 +216,13 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
   function place(lane:Block[],x:number,width:number,start:number,inSidebar:boolean) {
     const measured=lane.map(block=>{
       const indent=!inSidebar&&design.timeline&&block.section==="experience"&&block.role!=="heading"?13:0;
-      return {...measure(block,width-indent,inSidebar),indent};
+      const headingInset=!inSidebar&&accentBars.has(resume.template)&&block.role==="heading"?10:0;
+      return {...measure(block,width-indent-headingInset,inSidebar),indent};
     });
     let index=0;
     let y=start;
     for(const [offset,block] of measured.entries()) {
-      const gap=block.gap+(block.role==="heading"?6:0);
+      const gap=block.gap+(block.role==="heading"?8:0);
       const next=measured[offset+1];
       if(y+gap+block.height+(block.keep&&next?next.gap+next.height:0)>bottom) {index++;y=top;}
       if(y>top)y+=gap;
@@ -215,14 +230,20 @@ function layoutPremium(resume:Resume,pdf:jsPDF):Page[] {
         if(y+block.height+(block.role==="heading"&&lineIndex===0?2:0)>bottom){index++;y=top;}
         const page=ensurePage(index);
         if(block.role==="heading"&&lineIndex===0) {
-          page.marks.push({x,y:y-3,width,height:0.55,color:inSidebar?design.trim??design.sideInk:design.trim??"#B9C5CF"});
-          y+=2;
+          if(inSidebar) {
+            page.marks.push({x,y:y-3,width:Math.min(30,width),height:1.25,color:design.trim??design.sideInk});
+          } else if(accentBars.has(resume.template)) {
+            page.marks.push({x,y:y-1,width:3,height:block.height-1,color:trim});
+          } else {
+            page.marks.push({x,y:y-3,width,height:0.65,color:design.trim??"#C8D1DC"});
+          }
+          y+=3;
         }
         if(block.indent&&block.role==="title"&&lineIndex===0) {
           (page.dots??=[]).push({x:x+3,y:y+block.size-3,radius:2.4,color:trim});
         }
         if(block.indent)page.marks.push({x:x+2.6,y,width:0.65,height:block.height,color:"#C6D2DC"});
-        if(line.text)page.lines.push({...line,x:x+block.indent,y:y+block.size,size:block.size,color:block.color,bold:block.bold});
+        if(line.text)page.lines.push({...line,x:x+block.indent+(!inSidebar&&accentBars.has(resume.template)&&block.role==="heading"?10:0),y:y+block.size,size:block.size,color:block.color,bold:block.bold});
         y+=block.height;
       }
     }
