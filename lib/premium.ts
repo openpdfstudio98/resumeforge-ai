@@ -26,14 +26,14 @@ const styles:Partial<Record<Template,PremiumStyle>>={
   "ivory-editorial":{sidebar:"#F7F2E8",sideInk:"#544431",masthead:"rule",mastheadFill:"#FBF7EF",rightSidebar:true,framed:true,trim:"#9C825E",timeline:true,photo:false},
   "onyx-gold":{sidebar:"#25252B",sideInk:"#F6EDDD",masthead:"none",trim:"#B38A4C",timeline:true,photo:true},
   "aurora-minimal":{sidebar:"#EAF4F8",sideInk:"#244055",masthead:"rule",timeline:false,photo:false},
-  "executive-ledger":{sidebar:"#1F3864",sideInk:"#FFFFFF",masthead:"filled",mastheadFill:"#1F3864",timeline:true,photo:true},
+  "executive-ledger":{sidebar:"#EDF1F6",sideInk:"#243750",masthead:"filled",mastheadFill:"#223753",rightSidebar:true,trim:"#526C89",timeline:true,photo:true},
   "editorial-mono":{sidebar:"#F2F2F2",sideInk:"#222222",masthead:"rule",timeline:false,photo:false},
-  "canva-bloom":{sidebar:"#FBE9ED",sideInk:"#5C2737",masthead:"filled",mastheadFill:"#F7DCE4",rightSidebar:true,trim:"#D94F70",timeline:false,photo:true},
-  "neon-grid":{sidebar:"#0F172A",sideInk:"#E2E8F0",masthead:"filled",mastheadFill:"#0E7490",timeline:true,photo:true},
+  "canva-bloom":{sidebar:"#F2EBF7",sideInk:"#493656",masthead:"none",trim:"#A16D9F",timeline:false,photo:true},
+  "neon-grid":{sidebar:"#E8F3F3",sideInk:"#24454A",masthead:"filled",mastheadFill:"#164D58",rightSidebar:true,trim:"#4E9E9B",timeline:true,photo:true},
   "paper-loom":{sidebar:"#F5EFE6",sideInk:"#5C4A33",masthead:"rule",trim:"#9C825E",timeline:true,photo:false},
   "obsidian-ink":{sidebar:"#111827",sideInk:"#F6EDDD",masthead:"none",trim:"#B38A4C",timeline:true,photo:true},
   "sage-column":{sidebar:"#E8F0E9",sideInk:"#2F4A32",masthead:"none",timeline:false,photo:true},
-  "cobalt-slate":{sidebar:"#1E3A8A",sideInk:"#FFFFFF",masthead:"filled",mastheadFill:"#1E40AF",timeline:true,photo:true},
+  "cobalt-slate":{sidebar:"#E8EEF9",sideInk:"#263E65",masthead:"filled",mastheadFill:"#21468C",trim:"#779BD2",timeline:false,photo:true},
   "rose-atelier":{sidebar:"#FCE7F3",sideInk:"#831843",masthead:"filled",mastheadFill:"#FBCFE8",rightSidebar:true,trim:"#9F1239",timeline:false,photo:true},
 };
 
