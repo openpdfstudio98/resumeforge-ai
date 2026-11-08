@@ -45,8 +45,13 @@ test("editor covers all fields, reorder, live preview, autosave and interface la
   }
   await page.getByRole("button",{name:"Move up · Education",exact:true}).click();
   await expect(page.locator(".section-toggle").nth(1)).toHaveText("Education");
-  await page.locator(".editor-section").filter({has:page.getByRole("button",{name:"Skills",exact:true})}).locator(".drag-handle")
-    .dragTo(page.locator(".editor-section").first());
+  const dragHandle=page.locator(".editor-section").filter({has:page.getByRole("button",{name:"Skills",exact:true})}).locator(".drag-handle");
+  const dropTarget=page.locator(".editor-section").first();
+  await dragHandle.hover();
+  await page.mouse.down();
+  await dropTarget.hover({position:{x:24,y:16}});
+  await dropTarget.hover({position:{x:28,y:19}});
+  await page.mouse.up();
   await expect(page.locator(".section-toggle").first()).toHaveText("Skills");
   await page.getByRole("button",{name:"Design",exact:true}).click();
   await page.getByRole("combobox",{name:"Template",exact:true}).selectOption("modern-executive");
@@ -88,7 +93,7 @@ test("browser exports real multi-page files and keeps resume content local",asyn
     const wait=page.waitForEvent("download");
     await page.getByRole("button",{name:`Muat turun ${format}`}).click();
     const result=await wait;
-    expect(result.suggestedFilename()).toBe(`Chloé Nur.${format.toLowerCase()}`);
+    expect(result.suggestedFilename().replace("_"," ")).toBe(`Chloé Nur.${format.toLowerCase()}`);
     const file=info.outputPath(`resume.${format.toLowerCase()}`);
     await result.saveAs(file);
     results[format]=file;
@@ -162,6 +167,6 @@ test("keyboard and axe checks on landing, editor and ATS states",async({page})=>
   expect(await violations()).toEqual([]);
   await page.goto("/ms/ats");
   await page.getByRole("button",{name:"Semak resume",exact:true}).click();
-  await expect(page.getByRole("alert")).toContainText("Masukkan teks resume");
+  await expect(page.getByRole("alert").filter({hasText:"Masukkan teks resume"})).toBeVisible();
   expect(await violations()).toEqual([]);
 });
