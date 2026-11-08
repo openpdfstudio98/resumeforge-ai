@@ -23,7 +23,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata> {
   return {
     title,description,robots:{index:publicPage&&indexable(),follow:true},
     alternates:origin&&publicPage ? {canonical:`${origin}/${locale}${suffix}`,languages:{en:`${origin}/en${suffix}`,ms:`${origin}/ms${suffix}`,"x-default":`${origin}/en${suffix}`}} : undefined,
-    openGraph:{title:`${title} | Civora`,description,type:"website",siteName:"Civora",locale:locale==="en"?"en_US":"ms_MY",alternateLocale:[locale==="en"?"ms_MY":"en_US"],url:origin?`${origin}/${locale}${suffix}`:undefined},
+    openGraph:{title:`${title} | Civora`,description,type:"website",siteName:"Civora",locale:locale==="en"?"en_US":undefined,url:origin?`${origin}/${locale}${suffix}`:undefined},
     twitter:{card:"summary",title,description},
   };
 }

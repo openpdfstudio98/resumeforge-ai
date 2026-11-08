@@ -107,7 +107,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
   const r = makeResume(locale, template);
   const en = locale === "en";
   const creative=["creative-professional","citrus-studio","graphite-portfolio","bloom-studio","violet-atelier"].includes(template);
-  r.personal = {name:"Alyssa Tan",headline:en?"Operations Coordinator":"Penyelaras Operasi",email:"alyssa@example.com",phone:"+60 12 345 6789",location:"Selangor, Malaysia",website:""};
+  r.personal = {name:"Alyssa Tan",headline:en?"Operations Coordinator":"Penyelaras Operasi",email:"alyssa@example.com",phone:"+1 202 555 0147",location:"New York, United States",website:""};
   r.sections.summary = [{...blankEntry(),description:en?"Operations coordinator focused on stock accuracy, process documentation and cross-team planning.":"Penyelaras operasi yang memberi tumpuan kepada ketepatan stok, dokumentasi proses dan perancangan pasukan."}];
   r.sections.experience = [{...blankEntry(),title:r.personal.headline,organization:"Meridian Works",dates:"2023 – 2026",description:en?"Coordinated weekly inventory reviews across three teams.\nMaintained order tracking and documented handover procedures.":"Menyelaras semakan inventori mingguan merentas tiga pasukan.\nMenyelenggara penjejakan pesanan dan mendokumenkan proses serahan."}];
   r.sections.education = [{...blankEntry(),title:en?"Diploma in Business Administration":"Diploma Pentadbiran Perniagaan",organization:"Meridian College",dates:"2020 – 2023"}];
@@ -155,7 +155,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
       :(en?"Tracked incoming orders and reconciled stock movements.\nPrepared daily exception reports for supervisors.":"Menjejak pesanan masuk dan menyelaraskan pergerakan stok.\nMenyediakan laporan pengecualian harian untuk penyelia.");
     r.sections.experience.push({...blankEntry(),title:previousRole,organization:creative?"Cedar Design":"Cedar Services",dates:"2021 – 2023",description:previousWork});
   }
-  r.sections.languages=[{...blankEntry(),title:en?"English and Malay":"Bahasa Inggeris dan Bahasa Melayu",description:en?"Professional working proficiency":"Kecekapan profesional"}];
+  r.sections.languages=[{...blankEntry(),title:en?"English and Spanish":"Bahasa Inggeris dan Bahasa Sepanyol",description:en?"Professional working proficiency":"Kecekapan profesional"}];
   if(premiumStyle(template)) {
     r.personal.website=creative?"maya.example.com":"portfolio.example.com";
     r.sections.summary[0].description+=creative

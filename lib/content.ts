@@ -14,7 +14,7 @@ export const articles:Record<Locale,Record<ContentKey|GuideKey,Article>> = {
       ["Where is my resume saved?","Drafts are saved in this browser. In My Resumes, you can download backups, restore the previous save if available, or delete drafts and recovery data. Browser privacy settings or clearing site data can remove drafts."],
       ["How does the ATS score work?","The checker awards points for contact details, headings, experience, education and skills, readability, and optional job keywords. It normalizes the score across applicable checks. Individual recruiting systems can behave differently."],
     ]},
-    about:{title:"About Civora",intro:"A free resume workspace for job seekers in Malaysia and around the world.",sections:[
+    about:{title:"About Civora",intro:"A free resume workspace for job seekers around the world.",sections:[
       ["Built for the application process","Choose a layout, write your resume and download it in the format the employer requests. Use the checker to identify missing details and relevant job terms."],
       ["You control your content","Civora V1 uses rules to provide feedback. It does not generate qualifications or submit applications. Your work stays in your browser until you choose to download or share it."],
     ]},
@@ -36,10 +36,10 @@ export const articles:Record<Locale,Record<ContentKey|GuideKey,Article>> = {
       ["Write specific experience bullets","Describe what you did, how you did it and the result. Include scope, frequency or measurable outcomes only when you can verify them."],
       ["Check the final file","Open the exported PDF, select a few lines and check page breaks. Use a recognizable filename and submit the format requested in the vacancy."],
     ]},
-    "malaysia-resume-guide":{title:"Writing a resume for jobs in Malaysia",intro:"Match the application language and make it easy for recruiters to reach you.",sections:[
-      ["Match the vacancy","Use English or Bahasa Melayu according to the listing. Retain the official names of your qualifications and use the same date format throughout."],
-      ["Choose what to disclose","A city or region and a phone number with +60 are often enough for contact. Include sensitive identifiers or a photo only when the employer explicitly requests them and you are comfortable sharing them."],
-      ["Include relevant training","List job-relevant certificates, courses and languages. For a first role, consider putting education and internships before other experience."],
+    "international-resume-guide":{title:"Tailor your resume for international opportunities",intro:"Adapt your resume to the role, employer and location.",sections:[
+      ["Follow the job listing","Use the requested application language and format. Keep qualification names accurate and dates consistent."],
+      ["Choose relevant contact details","Include an email address, phone number with the appropriate country code, and city or region. Follow the employer’s instructions on photographs and personal information."],
+      ["Highlight relevant experience","List relevant certificates, languages and experience. Place education or internships earlier when they are most relevant to the role."],
     ]},
     "ats-keywords":{title:"Using ATS keywords honestly",intro:"Make the connection between a vacancy and the experience you already have.",sections:[
       ["Identify role-specific terms","Look for required skills, tools, methods and credentials in the job description. Terms repeated in the role requirements can help you choose what to emphasize."],
@@ -56,7 +56,7 @@ export const articles:Record<Locale,Record<ContentKey|GuideKey,Article>> = {
       ["Di manakah resume saya disimpan?","Draf disimpan dalam pelayar ini. Di Resume Saya, anda boleh memuat turun sandaran, memulihkan versi terdahulu jika tersedia, atau memadam data. Tetapan privasi pelayar atau pemadaman data laman boleh membuang draf."],
       ["Bagaimana skor ATS dikira?","Semakan memberi mata untuk maklumat hubungan, tajuk bahagian, pengalaman, pendidikan dan kemahiran, kebolehbacaan serta kata kunci pilihan. Skor dinormalkan mengikut kategori yang dinilai. Sistem pengambilan pekerja mungkin berfungsi secara berbeza."],
     ]},
-    about:{title:"Tentang Civora",intro:"Ruang kerja resume percuma untuk pencari kerja di Malaysia dan di seluruh dunia.",sections:[
+    about:{title:"Tentang Civora",intro:"Ruang kerja resume percuma untuk pencari kerja di seluruh dunia.",sections:[
       ["Dibina untuk permohonan kerja","Pilih susun atur, tulis resume dan muat turun dalam format yang diminta majikan. Semakan membantu mengenal pasti maklumat yang kurang dan istilah yang relevan."],
       ["Anda mengawal kandungan","Civora V1 menggunakan peraturan untuk memberi maklum balas. Ia tidak menjana kelayakan atau menghantar permohonan. Kerja anda kekal dalam pelayar sehingga anda memuat turun atau berkongsinya."],
     ]},
@@ -78,10 +78,10 @@ export const articles:Record<Locale,Record<ContentKey|GuideKey,Article>> = {
       ["Tulis pengalaman yang khusus","Nyatakan perkara yang anda lakukan, cara melakukannya dan hasilnya. Masukkan skop, kekerapan atau ukuran hasil hanya jika maklumat itu boleh disahkan."],
       ["Semak fail akhir","Buka PDF yang dieksport, pilih beberapa baris teks dan semak pemisah halaman. Gunakan nama fail yang jelas dan ikut format yang diminta dalam iklan kerja."],
     ]},
-    "malaysia-resume-guide":{title:"Menulis resume untuk pekerjaan di Malaysia",intro:"Padankan bahasa permohonan dan mudahkan pihak pengambilan pekerja menghubungi anda.",sections:[
-      ["Ikut bahasa iklan kerja","Gunakan bahasa Inggeris atau Bahasa Melayu mengikut iklan. Kekalkan nama rasmi kelayakan dan format tarikh yang seragam."],
-      ["Pilih maklumat yang perlu dikongsi","Bandar atau negeri dan nombor telefon dengan +60 selalunya memadai. Sertakan nombor pengenalan atau foto hanya jika majikan memintanya secara jelas dan anda selesa berkongsi."],
-      ["Senaraikan latihan yang berkaitan","Senaraikan sijil, kursus dan bahasa yang berkaitan. Untuk jawatan pertama, pertimbangkan meletakkan pendidikan dan latihan industri sebelum pengalaman lain."],
+    "international-resume-guide":{title:"Sesuaikan resume untuk peluang antarabangsa",intro:"Sesuaikan resume dengan jawatan, majikan dan lokasi.",sections:[
+      ["Ikut arahan iklan kerja","Gunakan bahasa dan format permohonan yang diminta. Pastikan nama kelayakan tepat dan format tarikh konsisten."],
+      ["Pilih butiran hubungan yang sesuai","Sertakan alamat e-mel, nombor telefon dengan kod negara yang sesuai, serta bandar atau wilayah. Ikuti arahan majikan mengenai gambar dan maklumat peribadi."],
+      ["Tonjolkan pengalaman yang relevan","Senaraikan sijil, bahasa dan pengalaman yang berkaitan. Letakkan pendidikan atau latihan industri lebih awal apabila relevan dengan jawatan."],
     ]},
     "ats-keywords":{title:"Gunakan kata kunci ATS secara tepat",intro:"Terangkan kaitan antara kekosongan jawatan dengan pengalaman sebenar anda.",sections:[
       ["Kenal pasti istilah khusus jawatan","Cari kemahiran, alat, kaedah dan kelayakan yang diminta. Istilah yang berulang dalam syarat jawatan boleh membantu menentukan perkara yang wajar diketengahkan."],

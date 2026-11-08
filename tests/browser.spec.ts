@@ -26,7 +26,7 @@ test("editor covers all fields, reorder, live preview, autosave and interface la
   await page.goto("/en/builder");
   await page.getByRole("button",{name:"New resume"}).click();
   await expect(page.getByRole("button",{name:"Download PDF"})).toBeDisabled();
-  const personal={"Resume title":"QA draft","Full name":"Nur QA","Professional title":"Engineer","Email":"nur@example.com","Phone":"+60 12 345 6789","City / region":"Shah Alam","Website or LinkedIn URL":"https://example.com"};
+  const personal={"Resume title":"QA draft","Full name":"Nur QA","Professional title":"Engineer","Email":"nur@example.com","Phone":"+1 202 555 0147","City / region":"New York","Website or LinkedIn URL":"https://example.com"};
   for(const [name,value] of Object.entries(personal))await page.getByLabel(name,{exact:true}).fill(value);
   for(const [section,label] of [["Professional Summary","Professional summary"],["Skills","Skills (separate with commas or new lines)"]]) {
     await page.getByRole("button",{name:section,exact:true}).click();

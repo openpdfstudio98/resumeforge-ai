@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
   devIndicators: false,
+  async redirects() {
+    return [{ source: "/:locale(en|ms)/career/malaysia-resume-guide", destination: "/:locale/career/international-resume-guide", permanent: true }];
+  },
   async headers() {
     return [{
       source: "/:path*",

@@ -1,6 +1,6 @@
 # Civora
 
-A bilingual, local-first resume builder for Malaysia and global applicants. Requires Node.js 24.
+A bilingual, local-first resume builder for job seekers worldwide. Requires Node.js 24.
 
 ```sh
 npm ci
