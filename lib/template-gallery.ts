@@ -21,6 +21,16 @@ export const templateGroups:Record<Template,Exclude<GalleryGroup,"all">>={
   "creative-professional":"professional",
   "modern-portrait":"photo",
   "engineering-blue":"technical",
+  "aurora-minimal":"premium",
+  "executive-ledger":"professional",
+  "editorial-mono":"premium",
+  "canva-bloom":"studio",
+  "neon-grid":"technical",
+  "paper-loom":"professional",
+  "obsidian-ink":"studio",
+  "sage-column":"premium",
+  "cobalt-slate":"professional",
+  "rose-atelier":"studio",
 };
 export const galleryOrder = [...templateKeys.filter(key=>templateGroups[key]==="studio"), ...templateKeys.filter(key=>templateGroups[key]==="premium"), ...templateKeys.filter(key=>!["studio","premium"].includes(templateGroups[key]))];
 
