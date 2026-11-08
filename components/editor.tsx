@@ -104,7 +104,7 @@ export function Editor({resume,locale,update,warning}:{resume:Resume;locale:Loca
         </div>
         <div className="actions editor-footer"><button className="btn" onClick={()=>jsonDownload([resume],name)}>{t.backup}</button><a className="btn" href={`/${locale}/ats?id=${resume.id}`}>{t.draftCheck}</a></div>
       </section>
-      <section className="panel preview-pane" aria-label={t.preview}>
+      <section className="panel preview-pane" tabIndex={0} aria-label={t.preview}>
         <div className="preview-heading"><h2>{t.preview}</h2><span className="badge">{t.a4}</span></div>
         <Preview resume={deferred} locale={locale}/>
       </section>
