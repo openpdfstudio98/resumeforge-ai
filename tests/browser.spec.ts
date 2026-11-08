@@ -223,17 +223,31 @@ test("language picker translates UI with the device API and keeps the resume unc
   await page.getByRole("button",{name:"New resume"}).click();
   await page.getByLabel("Full name",{exact:true}).fill("Private Name");
   await page.getByRole("button",{name:"Language",exact:true}).click();
-  await page.getByLabel("Search languages").fill("Español");
-  await page.getByRole("combobox",{name:"Choose a language"}).selectOption("es");
+  await page.getByLabel("Search languages").fill("Français");
+  await page.getByRole("combobox",{name:"Choose a language"}).selectOption("fr");
   await page.getByRole("button",{name:"Translate interface"}).click();
-  await expect(page.locator("html")).toHaveAttribute("lang","es");
-  await expect(page.getByRole("button",{name:"es · Download PDF"})).toBeVisible();
-  await expect(page.getByLabel("es · Full name",{exact:true})).toHaveValue("Private Name");
+  await expect(page.locator("html")).toHaveAttribute("lang","fr");
+  await expect(page.getByRole("button",{name:"fr · Download PDF"})).toBeVisible();
+  await expect(page.getByLabel("fr · Full name",{exact:true})).toHaveValue("Private Name");
   await expect(page.locator(".document-sheet")).toContainText("Private Name");
   await page.reload();
-  await expect(page.getByRole("button",{name:"es · Download PDF"})).toBeVisible();
+  await expect(page.getByRole("button",{name:"fr · Download PDF"})).toBeVisible();
   await page.getByRole("button",{name:"Language",exact:true}).click();
   await page.getByRole("link",{name:"English",exact:true}).click();
   await expect(page.locator("html")).toHaveAttribute("lang","en");
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Private Name");
+});
+
+
+test("bundled Spanish works when browser translation is unavailable",async({page})=>{
+  await page.addInitScript(()=>Object.defineProperty(window,"Translator",{configurable:true,value:undefined}));
+  await page.goto("/en");
+  await page.getByRole("button",{name:"Language",exact:true}).click();
+  await page.getByRole("combobox",{name:"Choose a language"}).selectOption("es");
+  await page.getByRole("button",{name:"Translate interface"}).click();
+  await expect(page.locator("html")).toHaveAttribute("lang","es");
+  await page.getByRole("link",{name:"Crear mi currículum"}).click();
+  await page.getByRole("button",{name:"Nuevo currículum"}).click();
+  await expect(page.getByLabel("Nombre completo",{exact:true})).toBeVisible();
+  await expect(page.getByRole("button",{name:"Descargar PDF",exact:true})).toBeDisabled();
 });
