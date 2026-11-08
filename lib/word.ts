@@ -54,7 +54,7 @@ export function wordDocument(resume: Resume) {
   }
   return new Document({
     title:resume.personal.name.trim() || resume.title,
-    creator:"ResumeForge AI",
+    creator:"Civora",
     sections:[{properties:{page:{size:{width:Math.round(a4.width*20),height:Math.round(a4.height*20)},margin:{top:margin,bottom:margin,left:margin,right:margin}}},children:children.length ? children : [new Paragraph("")]}],
   });
 }

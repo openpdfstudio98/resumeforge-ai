@@ -103,7 +103,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
     </>}
     {route==="dashboard" && <>
       <header className="workspace-heading"><div><div className="eyebrow">{t.overview}</div><h1>{s.nav.dashboard}</h1></div></header>
-      <section className="dashboard-hero"><div className="eyebrow">RESUMEFORGE AI</div><h2>{t.dashboardTitle}</h2><p>{t.dashboardIntro}</p><a className="btn primary" href={builder}><Plus size={18}/>{t.create}</a></section>
+      <section className="dashboard-hero"><div className="eyebrow">CIVORA</div><h2>{t.dashboardTitle}</h2><p>{t.dashboardIntro}</p><a className="btn primary" href={builder}><Plus size={18}/>{t.create}</a></section>
       <div className="stats"><div className="panel"><FileText size={20}/><strong>{resumes.length}</strong><span>{t.drafts}</span></div><div className="panel"><LayoutTemplate size={20}/><strong>{templateKeys.length}</strong><span>{t.templates}</span></div><div className="panel"><ShieldCheck size={20}/><strong>100%</strong><span>{t.privacy}</span></div></div>
       <section className="panel stack"><div className="split"><h2>{t.recent}</h2><a className="text-link" href={`${root}/resumes`}>{t.viewAll}</a></div>{cards(sorted.slice(0,3))}</section>
       <h2 className="section-title">{t.tools}</h2><div className="actions"><a className="btn" href={`${root}/templates`}><LayoutTemplate size={18}/>{s.nav.templates}</a><a className="btn" href={`${root}/ats`}><ScanLine size={18}/>{s.nav.ats}</a></div>

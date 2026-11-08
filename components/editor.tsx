@@ -23,7 +23,7 @@ export function Editor({resume,locale,update,warning}:{resume:Resume;locale:Loca
   const latest=useRef(resume);
   const deferred=useDeferredValue(resume);
   const filled=Boolean(resume.photo)||documentBlocks(resume).length>0;
-  const name=(resume.personal.name || resume.title || "ResumeForge").replace(/[^\p{L}\p{N} ._-]/gu,"").trim().slice(0,90) || "ResumeForge";
+  const name=(resume.personal.name || resume.title || "Civora").replace(/[^\p{L}\p{N} ._-]/gu,"").trim().slice(0,90) || "Civora";
   function patch(value:Partial<Resume>) {
     const draft={...latest.current,...value};
     if(update(draft))latest.current=draft;
