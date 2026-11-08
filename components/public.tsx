@@ -1,13 +1,13 @@
 import { ArrowRight, Check, FileText, FolderOpen, LayoutTemplate, ScanLine, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { articles } from "../lib/content";
-import { galleryCopy, templateGroups } from "../lib/template-gallery";
+import { galleryOrder, galleryCopy, templateGroups } from "../lib/template-gallery";
 import { GalleryFilters } from "./gallery-filters";
 import { TemplateSample } from "./template-sample";
 import { Ui } from "./ui-language";
 import { extraCopy } from "../lib/ui-language";
 import { guideKeys, site, type NavKey } from "../lib/copy";
-import { demoPortraitPath, labels, sampleResume, templateKeys, templates, type Locale, type Template } from "../lib/resume";
+import { demoPortraitPath, labels, sampleResume, templates, type Locale, type Template } from "../lib/resume";
 
 function TemplateCard({locale,template}:{locale:Locale;template:Template}) {
   const root=`/${locale}`;
@@ -90,7 +90,7 @@ export function Home({locale}:{locale:Locale}) {
       <div className="step-grid">{extra.steps.map((label,index)=><div key={label} className="step-card"><span className="step-number">0{index+1}</span><div><h3><Ui>{label}</Ui></h3><p><Ui>{extra.stepDetails[index]}</Ui></p></div></div>)}</div>
     </section>
     <section className="public-section"><div className="split"><h2><Ui>{t.gallery}</Ui></h2><a className="text-link" href={`${root}/templates`}><Ui>{t.browse}</Ui><ArrowRight size={16}/></a></div>
-      <div className="template-grid">{(["modern-portrait","engineering-blue","classic-ats"] as const).map(template=><TemplateCard key={template} template={template} locale={locale}/>)}</div>
+      <div className="template-grid">{(["midnight-executive","citrus-studio","teal-timeline"] as const).map(template=><TemplateCard key={template} template={template} locale={locale}/>)}</div>
     </section>
   </>;
 }
@@ -102,7 +102,7 @@ export function Gallery({locale,template}:{locale:Locale;template?:Template}) {
     <TemplateSample locale={locale} template={template} full/>
   </section>;
   return <section className="public-section"><div className="eyebrow"><Ui>{t.nav.templates}</Ui></div><h1><Ui>{gallery.heading}</Ui></h1><p><Ui>{gallery.intro}</Ui></p>
-    <GalleryFilters locale={locale} cards={templateKeys.map(key=>({template:key,node:<TemplateCard template={key} locale={locale}/>}))}/>
+    <GalleryFilters locale={locale} cards={galleryOrder.map(key=>({template:key,node:<TemplateCard template={key} locale={locale}/>}))}/>
   </section>;
 }
 export function Reading({locale,path,guide}:{locale:Locale;path:NavKey;guide?:typeof guideKeys[number]}) {

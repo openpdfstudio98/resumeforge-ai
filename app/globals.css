@@ -108,6 +108,12 @@ button:disabled{cursor:default;opacity:.48}
 .template-figure.engineering-blue,.template-figure.technical-engineer{background:radial-gradient(#f0f8ff,#dbeaf7)}
 .template-figure.creative-professional{background:radial-gradient(#fcf1ff,#eddef7)}
 .template-figure.minimal-professional{background:radial-gradient(#faf9f5,#eeeae0)}
+.template-figure.citrus-studio{background:radial-gradient(at 35% 15%,#fff4d7,#d9eef7 66%)}
+.template-figure.midnight-executive{background:radial-gradient(at 50% 10%,#e6edf9,#c5d0e2)}
+.template-figure.silver-editorial{background:radial-gradient(at 60% 12%,#fafbfc,#dde3eb)}
+.template-figure.graphite-portfolio{background:radial-gradient(at 30% 10%,#f1e9e3,#d6cbd0)}
+.template-figure.mono-grid{background:radial-gradient(at 65% 12%,#fbf9f6,#e7e3dc)}
+.template-figure.teal-timeline{background:radial-gradient(at 50% 12%,#e9f7f4,#c2e2de)}
 .detail{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:60vh}
 .detail h1,.detail p,.detail .btn{margin:14px 0 0}
 .detail .btn+.btn{margin-inline-start:8px}

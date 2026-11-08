@@ -1,4 +1,5 @@
 "use client";
+import { sampleHasPhoto } from "../lib/premium";
 import { Copy, FileText, FolderOpen, LayoutTemplate, Plus, ScanLine, ShieldCheck, Trash2, Upload } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
@@ -53,7 +54,7 @@ export function Workspace({locale,route}:{locale:Locale;route:WorkRoute}) {
     async function loadSample() {
       const draft=sampleResume(locale,query.template);
       draft.title=extraCopy[locale].sample;
-      if(query.template==="modern-portrait") {
+      if(sampleHasPhoto(query.template)) {
         try {
           const response=await fetch(demoPortraitPath,{signal:controller.signal});
           if(response.ok)draft.photo=await preparePhoto(new File([await response.blob()],"portrait.webp",{type:"image/webp"}));

@@ -1,3 +1,4 @@
+import { galleryOrder } from "../lib/template-gallery";
 import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -278,14 +279,17 @@ test("gallery shows completed samples and filters to matching themes",async({pag
   await page.goto("/en/templates");
   const cards=page.locator(".template-card");
   await expect(cards).toHaveCount(templateKeys.length);
-  for (const [index,template] of templateKeys.entries()) {
+  for (const [index,template] of galleryOrder.entries()) {
     await expect(cards.nth(index).locator(".document-sheet text").first()).toHaveText(sampleResume("en",template).personal.name);
   }
+  await page.getByRole("button",{name:"Premium collection",exact:true}).click();
+  await expect(cards).toHaveCount(6);
+  await expect(cards.locator("svg image")).toHaveCount(5);
   await page.getByRole("button",{name:"Technical",exact:true}).click();
   await expect(cards).toHaveCount(2);
   await page.getByRole("button",{name:"With photo",exact:true}).click();
-  await expect(cards).toHaveCount(1);
-  await expect(cards.locator("svg image")).toHaveCount(1);
+  await expect(cards).toHaveCount(6);
+  await expect(cards.locator("svg image")).toHaveCount(6);
   await page.getByRole("button",{name:"All styles",exact:true}).click();
   await page.getByRole("link",{name:"Try this sample · Classic ATS",exact:true}).click();
   await expect(page.getByLabel("Full name",{exact:true})).toHaveValue("Alyssa Tan");

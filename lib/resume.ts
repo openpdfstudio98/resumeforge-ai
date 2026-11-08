@@ -7,7 +7,7 @@ export type SectionKey = typeof sectionKeys[number];
 export const entryFields = ["title", "organization", "dates", "description"] as const;
 export const personalFields = ["name", "headline", "email", "phone", "location", "website"] as const;
 export type Entry = Record<typeof entryFields[number], string> & { id: string };
-export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue"] as const;
+export const templateKeys = ["classic-ats", "modern-executive", "fresh-graduate", "minimal-professional", "technical-engineer", "creative-professional", "modern-portrait", "engineering-blue", "citrus-studio", "midnight-executive", "silver-editorial", "graphite-portfolio", "mono-grid", "teal-timeline"] as const;
 export type Template = typeof templateKeys[number];
 export const fonts = ["sans", "serif", "mono"] as const;
 export type Font = typeof fonts[number];
@@ -38,6 +38,12 @@ export const templates: Record<Template, {name: string; color: string; font: Fon
   "creative-professional": {name:"Creative Professional",color:"#7738A3",font:"sans",description:{en:"An expressive accent treatment with a clear reading order.",ms:"Aksen warna yang menyerlah dengan turutan bacaan yang jelas."}},
   "modern-portrait": {name:"Modern Portrait",color:"#4338AA",font:"sans",description:{en:"A bold name and optional portrait at the top right, with a clean single-column body.",ms:"Nama yang menonjol dan foto pilihan di kanan atas, dengan isi resume satu lajur."}},
   "engineering-blue": {name:"Engineering Blue",color:"#23496C",font:"sans",description:{en:"Navy accents put technical skills, certifications and projects before work history.",ms:"Aksen biru navy menonjolkan kemahiran teknikal, pensijilan dan projek sebelum sejarah kerja."}},
+  "citrus-studio":{name:"Citrus Studio",color:"#126B95",font:"sans",description:{en:"A bright blue sidebar with playful citrus shapes for creative roles.",ms:"Sidebar biru terang dengan bentuk berwarna untuk bidang kreatif."}},
+  "midnight-executive":{name:"Midnight Executive",color:"#253550",font:"serif",description:{en:"A deep navy sidebar, serif headline and a refined experience timeline.",ms:"Sidebar biru gelap, tajuk serif dan garis masa pengalaman yang kemas."}},
+  "silver-editorial":{name:"Silver Editorial",color:"#465469",font:"sans",description:{en:"A soft silver sidebar and a clean, detailed editorial layout.",ms:"Sidebar perak lembut dengan susun atur editorial yang kemas."}},
+  "graphite-portfolio":{name:"Graphite Portfolio",color:"#363541",font:"sans",description:{en:"A charcoal sidebar gives creative projects and skills a strong contrast.",ms:"Sidebar arang gelap memberi kontras pada projek kreatif dan kemahiran."}},
+  "mono-grid":{name:"Mono Grid",color:"#292C34",font:"sans",description:{en:"An understated two-column grid with fine rules and a centered title.",ms:"Dua lajur monokrom dengan garis halus dan tajuk di tengah."}},
+  "teal-timeline":{name:"Teal Timeline",color:"#006D70",font:"sans",description:{en:"A teal masthead and a clear visual timeline for experience and achievements.",ms:"Pengepala hijau kebiruan dan garis masa visual untuk pengalaman dan pencapaian."}},
 };
 export const demoPortraitPath="/images/resume-demo-portrait.webp";
 export const STORAGE_KEY = "resumeforge:v1";
@@ -82,7 +88,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
     r.sections.experience=[{...r.sections.experience[0],title:r.personal.headline,description:en?"Reviewed dimensional and pressure test reports for industrial valves.":"Menyemak laporan ukuran dan ujian tekanan bagi injap industri."}];
     r.sections.education=[{...r.sections.education[0],title:en?"Diploma in Mechanical Engineering":"Diploma Kejuruteraan Mekanikal"}];
   }
-  if(template==="modern-executive") {
+  if(template==="modern-executive"||template==="midnight-executive") {
     r.personal={...r.personal,name:"Nadia Rahman",headline:en?"Operations Manager":"Pengurus Operasi",email:"nadia@example.com"};
     r.sections.summary[0].description=en?"Operations manager who leads production planning, vendor coordination and process improvement across multiple teams.":"Pengurus operasi yang mengetuai perancangan pengeluaran, penyelarasan pembekal dan penambahbaikan proses merentas pasukan.";
     r.sections.experience[0].title=r.personal.headline;
@@ -95,7 +101,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
     r.sections.experience[0].dates="2025 – 2026";
     r.sections.education[0].dates="2023 – 2026";
   }
-  if(template==="creative-professional") {
+  if(template==="creative-professional"||template==="citrus-studio"||template==="graphite-portfolio") {
     r.personal={...r.personal,name:"Maya Lee",headline:en?"Brand Designer":"Pereka Jenama",email:"maya@example.com"};
     r.sections.summary[0].description=en?"Brand designer with experience in visual identities, digital campaigns and design systems for small businesses.":"Pereka jenama yang berpengalaman dalam identiti visual, kempen digital dan sistem reka bentuk untuk perniagaan kecil.";
     r.sections.experience[0].title=r.personal.headline;
@@ -107,7 +113,7 @@ export function sampleResume(locale: Locale, template: Template): Resume {
   }
   if(template!=="fresh-graduate") {
     const technical=template==="engineering-blue"||template==="technical-engineer";
-    const creative=template==="creative-professional";
+    const creative=template==="creative-professional"||template==="citrus-studio"||template==="graphite-portfolio";
     const previousRole=technical?(en?"Inspection Technician":"Juruteknik Pemeriksaan"):creative?(en?"Junior Designer":"Pereka Junior"):(en?"Operations Assistant":"Pembantu Operasi");
     const previousWork=technical
       ?(en?"Recorded dimensional checks and maintained inspection records.\nPrepared equipment and test documentation for routine inspections.":"Merekod pemeriksaan ukuran dan menyelenggara rekod pemeriksaan.\nMenyediakan peralatan dan dokumentasi ujian untuk pemeriksaan rutin.")

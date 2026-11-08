@@ -1,18 +1,20 @@
-import { filled, labels, type Resume } from "./resume";
+import { filled, labels, type Resume, type SectionKey } from "./resume";
 
 export type Role = "name" | "headline" | "contact" | "heading" | "title" | "meta" | "body";
-export type Block = {text: string; role: Role; keep: boolean; gap: number};
+export type Block = {text: string; role: Role; keep: boolean; gap: number; section?:SectionKey};
 export function documentBlocks(resume: Resume): Block[] {
   const blocks: Block[] = [];
+  let section:SectionKey|undefined;
   function add(value: string, role: Role, gap = 0, keep = false) {
     const text = value.trim().normalize("NFC");
-    if (text) blocks.push({text,role,gap,keep});
+    if (text) blocks.push({text,role,gap,keep,section});
   }
   const {personal:p} = resume;
   add(p.name,"name",0,true);
   add(p.headline,"headline",0,true);
   add([p.email,p.phone,p.location,p.website].map(x=>x.trim()).filter(Boolean).join("  |  "),"contact",4);
   for (const key of resume.order) {
+    section=key;
     const rows = resume.sections[key].filter(filled);
     if (!rows.length) continue;
     if (key !== "custom") add(labels[resume.locale][key],"heading",12,true);

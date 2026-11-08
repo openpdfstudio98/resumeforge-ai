@@ -1,3 +1,4 @@
+import { sampleHasPhoto } from "../lib/premium";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { layoutPdf, type FontBytes } from "../lib/document";
@@ -17,7 +18,7 @@ function getFonts(font:Font) {
 
 export function TemplateSample({locale,template,full=false}:{locale:Locale;template:Template;full?:boolean}) {
   const resume=sampleResume(locale,template);
-  if(template==="modern-portrait")resume.photo=demoPortraitPath;
+  if(sampleHasPhoto(template))resume.photo=demoPortraitPath;
   const {pages}=layoutPdf(resume,getFonts(resume.font));
   const visible=full?pages:pages.slice(0,1);
   return <div className={`template-figure ${template}${full?" template-figure-full":""}`} translate="no">
