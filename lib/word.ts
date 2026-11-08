@@ -54,7 +54,7 @@ export function wordDocument(resume: Resume) {
   }
   return new Document({
     title:resume.personal.name.trim() || resume.title,
-    creator:"Civora",
+    creator:"Civora Resume",
     sections:[{properties:{page:{size:{width:Math.round(a4.width*20),height:Math.round(a4.height*20)},margin:{top:margin,bottom:margin,left:margin,right:margin}}},children:children.length ? children : [new Paragraph("")]}],
   });
 }

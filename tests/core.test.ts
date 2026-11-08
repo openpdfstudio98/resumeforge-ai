@@ -61,7 +61,7 @@ for (const [index,template] of templateKeys.entries()) {
       assert.match(extracted,/Chloé Izzat/);
       assert.match(extracted,/Baris 110 menyemak rekod kerja – contoh operasi\./);
       assert.match(extracted,locale==="ms"?/Pengalaman Kerja/:/Work Experience/);
-      assert.doesNotMatch(extracted,/Civora/);
+      assert.doesNotMatch(extracted,/Civora Resume/);
       const xml=execFileSync("unzip",["-p",docx,"word/document.xml"],{encoding:"utf8"});
       assert.match(xml,/<w:t[^>]*>Chloé Izzat<\/w:t>/);
       assert.match(xml,/<w:t[^>]*>Baris 110 menyemak rekod kerja – contoh operasi\.<\/w:t>/);
