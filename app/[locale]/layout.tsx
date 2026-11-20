@@ -21,5 +21,18 @@ export function generateStaticParams() {
 export default async function Layout({children,params}:{children:ReactNode;params:Promise<{locale:string}>}) {
   const {locale}=await params;
   if(!locales.includes(locale as Locale)) notFound();
-  return <html lang={locale}><body><UiLanguage locale={locale as Locale}>{children}</UiLanguage></body></html>;
+  return (
+    <html lang={locale}>
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5858650167026791"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body>
+        <UiLanguage locale={locale as Locale}>{children}</UiLanguage>
+      </body>
+    </html>
+  );
 }
